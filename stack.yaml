@@ -1,0 +1,25 @@
+system-ghc: false
+
+resolver: lts-6.4
+
+packages:
+- '.'
+- location:
+    git: https://github.com/runeksvendsen/haskell-bitcoin-api.git
+    commit: d3de7f41a68a1050e02fcb7f7cbf90c4979c02a4
+  extra-dep: true
+
+# Dependency packages to be pulled from upstream that are not in the resolver
+# (e.g., acme-missiles-0.3)
+extra-deps:
+- haskoin-core-0.3.1
+- murmur3-1.0.2
+- pbkdf-1.1.1.1
+- secp256k1-0.4.6
+
+# Override default flag values for local packages and extra-deps
+flags: {}
+
+# Extra package databases containing global packages
+extra-package-dbs: []
+
