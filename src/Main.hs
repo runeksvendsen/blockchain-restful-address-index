@@ -6,33 +6,14 @@ import qualified  Network.Haskoin.Crypto as HC
 import qualified  Network.Haskoin.Constants as HCC
 
 import           Prelude hiding (userError)
-import           Snap -- (Snap, quickHttpServe)
--- import           Snap.Snaplet (runSnaplet)
-import           Snap.Http.Server -- (defaultConfig, httpServe)
-import           System.Environment (lookupEnv)
-import           Text.Read (readMaybe)
-import           Snap.Http.Server.Config (setPort)
-import           Network.HTTP.Client (HttpException (..))
-import           Network.Bitcoin.Api.Client (Client, withClient)
-import           Network.Bitcoin.Api.Blockchain (searchRawTransactions)
-import           Network.Bitcoin.Api.UTXO (getTxOut)
-import           Network.Bitcoin.Api.Types.TxInfo (TxInfo(..), Vout(..), Vin(..))
-import qualified Network.Bitcoin.Api.Types.UnspentTxOut as UTXO (UnspentTxOut(..))
-import qualified Data.Bitcoin.Types  as BT
-import qualified Data.Base58String.Bitcoin as B58S
+import           Snap
+import           Snap.Http.Server
 import           Data.Base58String.Bitcoin (b58String)
-import qualified Data.Bitcoin.Types  as BT
-import           Control.Monad (forM)
 import           Control.Monad.IO.Class (liftIO)
-import           Data.Aeson (Value(Object, String), FromJSON, ToJSON, parseJSON, toJSON,
-                            fromJSON, (.=), (.:), object)
-import           Data.Word (Word32)
-import           Data.List (sortOn, concat)
-import           Data.Maybe (isJust, fromJust, listToMaybe)
+import           Data.Aeson (toJSON)
+import           Data.Aeson.Encode.Pretty (encodePretty)
 import           System.Environment (getArgs)
 import           Data.String.Conversions (cs)
-
-import           Data.Aeson.Encode.Pretty (encodePretty)
 
 
 main :: IO ()
