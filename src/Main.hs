@@ -1,36 +1,50 @@
 {-# LANGUAGE  OverloadedStrings #-}
 
-import            Lib (getUnredeemedOutputs)
+import           Prelude hiding (userError)
+
+import            Lib       (getUnredeemedOutputs)
+import            Config    (BTCRPCConf(..), getRPCConf)
 
 import qualified  Network.Haskoin.Crypto as HC
 import qualified  Network.Haskoin.Constants as HCC
 
-import           Prelude hiding (userError)
+import           Snap (Config, Snap, serveSnaplet)
+import           Snap.Snaplet (runSnaplet)
+import           Snap.Http.Server (defaultConfig, httpServe)
+
 import           Snap
-import           Snap.Http.Server
-import           Data.Base58String.Bitcoin (b58String)
-import           Control.Monad.IO.Class (liftIO)
-import           Data.Aeson (toJSON)
-import           Data.Aeson.Encode.Pretty (encodePretty)
-import           System.Environment (getArgs)
-import           Data.String.Conversions (cs)
+-- import           Snap.Http.Server
+import           Snap.Http.Server.Config
+import           Data.Base58String.Bitcoin  (b58String)
+import           Control.Monad.IO.Class     (liftIO)
+import           Data.Aeson                 (toJSON)
+import           Data.Aeson.Encode.Pretty   (encodePretty)
+import           System.Environment         (getArgs)
+import           Data.String.Conversions    (cs)
 
 
 main :: IO ()
-main = HCC.switchToTestnet3 >> quickHttpServe site
+main = do
+    HCC.switchToTestnet3
+    serveSnaplet defaultConfig appInit
 
-site :: Snap ()
-site =
-    route [ ("unspentOutputs/:address", unspentOutputHandler) ]
 
-unspentOutputHandler :: Snap ()
-unspentOutputHandler = do
+appInit :: SnapletInit () ()
+appInit = makeSnaplet "BlockchainAddressIndex" "Blockchain RESTful address index" Nothing $ do
+    rpcConf <- liftIO . getRPCConf =<< getSnapletUserConfig
+    liftIO $ putStrLn $ "Using Bitcoin Core endpoint: " ++
+            rpcHost rpcConf ++ ":" ++ show (rpcPort rpcConf)
+    addRoutes [ ("unspentOutputs/:address", unspentOutputHandler rpcConf) ]
+
+
+unspentOutputHandler :: MonadSnap m => BTCRPCConf -> m ()
+unspentOutputHandler conf = do
     writeLBS . encodePretty . toJSON =<<
-        liftIO . getUnredeemedOutputs "192.168.1.102" 8334 "john_oliver" "KGbv6HvJ5z" .
+        liftIO . getUnredeemedOutputs conf .
         b58String . HC.addrToBase58 =<< getBitcoinAddressArg
     writeBS "\n"
 
-getBitcoinAddressArg :: Snap HC.Address
+getBitcoinAddressArg :: MonadSnap m => m HC.Address
 getBitcoinAddressArg = do
     paramBS <- maybe
             (userError "Empty 'address' parameter") return =<<
@@ -39,10 +53,10 @@ getBitcoinAddressArg = do
         (userError $ "Bitcoin address parse failure: " ++ cs paramBS) return
         (HC.base58ToAddr paramBS)
 
-userError :: String -> Snap a
+userError :: MonadSnap m => String -> m a
 userError = errorWithDescription 400
 
-errorWithDescription :: Int -> String -> Snap a
+errorWithDescription :: MonadSnap m => Int -> String -> m a
 errorWithDescription code errStr = do
     modifyResponse $ setResponseStatus code (cs errStr)
     finishWith =<< getResponse

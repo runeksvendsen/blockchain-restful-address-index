@@ -2,6 +2,8 @@
 
 module Lib where
 
+import           Config (BTCRPCConf(..))
+
 import           Network.Bitcoin.Api.Client (Client, withClient)
 import           Network.Bitcoin.Api.Blockchain (searchRawTransactions)
 import           Network.Bitcoin.Api.UTXO (getTxOut)
@@ -75,8 +77,8 @@ checkSpentAndConfirmData client afi@(AddressFundingInfo addr txid index _ _) =
         maybe (return Nothing)
             (\utxOut -> if utxOut `match` afi then return (Just afi) else return Nothing)
 
-getUnredeemedOutputs :: String -> Int -> T.Text -> T.Text -> B58S.Base58String -> IO [AddressFundingInfo]
-getUnredeemedOutputs host port user pass addr =
+getUnredeemedOutputs :: BTCRPCConf -> B58S.Base58String -> IO [AddressFundingInfo]
+getUnredeemedOutputs (BTCRPCConf host port user pass) addr =
     withClient host port user pass $
         \client -> do
             txiList <- searchRawTransactions client addr

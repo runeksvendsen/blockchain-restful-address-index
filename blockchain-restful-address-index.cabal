@@ -35,6 +35,7 @@ executable rest-addr
                      , aeson-pretty
                      , http-client
                      , string-conversions
+                     , configurator
   default-language:    Haskell2010
   other-modules:       Lib
 
