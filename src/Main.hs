@@ -34,9 +34,9 @@ appInit = makeSnaplet "BlockchainAddressIndex" "Blockchain RESTful address index
     rpcConf <- liftIO . getRPCConf =<< getSnapletUserConfig
     liftIO $ putStrLn $ "Using Bitcoin Core endpoint: " ++
             rpcHost rpcConf ++ ":" ++ show (rpcPort rpcConf)
-    liftIO $ putStr $ "Performing test request... "
-    liftIO . putStrLn . ("Success: " ++) . show =<< liftIO (getUnredeemedOutputs
-            rpcConf (b58String "2N414xMNQaiaHCT5D7JamPz7hJEc9RG7469"))
+    liftIO $ putStr "Performing test request... " >>
+            getUnredeemedOutputs rpcConf testAddr >>=
+            putStrLn . ("Success! " ++) . show
     addRoutes [ ("unspentOutputs/:address", unspentOutputHandler rpcConf) ]
 
 
@@ -64,8 +64,7 @@ errorWithDescription code errStr = do
     modifyResponse $ setResponseStatus code (cs errStr)
     finishWith =<< getResponse
 
-
-
+testAddr = b58String "2N414xMNQaiaHCT5D7JamPz7hJEc9RG7469"
 
 
 
