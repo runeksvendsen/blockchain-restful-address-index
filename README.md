@@ -4,6 +4,9 @@
 
 Exposes a single resource, `/unspentOutputs/<address>`, which returns a list of all unspent outputs paying to `<address>`.
 
+### Limitations:
+Unspent outputs are not returned until they have at least a single confirmation. However, if a new, unconfirmed transaction redeems an output, this output will not be included in the returned results. In other words, you cannot get information about an unspent output until it has at least one confirmation, but it will disappear from the returned (unspent) outputs as a soon as a transaction appears which spends this output.
+
 Example usage and output:
 
         $ curl -v 'http://localhost:8000/unspentOutputs/2N414xMNQaiaHCT5D7JamPz7hJEc9RG7469'
