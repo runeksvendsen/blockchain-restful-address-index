@@ -1,5 +1,7 @@
 {-# LANGUAGE  OverloadedStrings #-}
 
+module Main where
+
 import           Prelude hiding (userError)
 
 import            Lib       (getUnredeemedOutputs)
