@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e1cc183c-e1c9-422b-bb97-227a64f6cfc9" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/blockchain-restful-address-index.cabal" afterPath="$PROJECT_DIR$/blockchain-restful-address-index.cabal" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Config.hs" afterPath="$PROJECT_DIR$/src/Config.hs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Main.hs" afterPath="$PROJECT_DIR$/src/Main.hs" />
-    </list>
+    <list default="true" id="e1cc183c-e1c9-422b-bb97-227a64f6cfc9" name="Default" comment="" />
     <ignored path="blockchain-restful-address-index.iws" />
     <ignored path=".idea/workspace.xml" />
     <ignored path="$PROJECT_DIR$/out/" />
@@ -658,12 +653,12 @@
       <workItem from="1467577974374" duration="624000" />
       <workItem from="1467579552888" duration="208000" />
       <workItem from="1467610629103" duration="23281000" />
-      <workItem from="1469912274226" duration="2214000" />
+      <workItem from="1469912274226" duration="2461000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="28018000" />
+    <option name="totallyTimeSpent" value="28265000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1024" height="640" extended-state="0" />
