@@ -16,30 +16,30 @@ import           Snap.Http.Server (defaultConfig, httpServe)
 
 import           Snap
 import           Snap.Http.Server.Config
-import           Data.Base58String.Bitcoin  (b58String)
 import           Control.Monad.IO.Class     (liftIO)
 import           Data.Aeson                 (toJSON)
 import           Data.Aeson.Encode.Pretty   (encodePretty)
 import           System.Environment         (getArgs)
 import           Data.String.Conversions    (cs)
+import           Data.Base58String.Bitcoin  (b58String)
 
 
 main :: IO ()
-main = Conf.wrapArg $ \cfg _ -> do
-    HCC.switchToTestnet3
+main = Conf.wrapArg $ \cfg _ ->
     serveSnaplet defaultConfig (appInit cfg)
-
 
 appInit :: Conf.Config -> SnapletInit () ()
 appInit cfg = makeSnaplet "BlockchainAddressIndex" "Blockchain RESTful address index" Nothing $ do
-    rpcConf <- liftIO $ Conf.getRPCConf cfg
+    bitcoindConf <- liftIO $ Conf.getRPCConf cfg
+    liftIO $ Conf.setBitcoinNetwork bitcoindConf
     liftIO $ putStrLn $ "Using Bitcoin Core endpoint: " ++
-            Conf.rpcHost rpcConf ++ ":" ++ show (Conf.rpcPort rpcConf)
+            Conf.rpcHost bitcoindConf ++ ":" ++ show (Conf.rpcPort bitcoindConf)
+    let testAddr = Conf.getTestAddress bitcoindConf
     liftIO $ putStr "Performing test request... " >>
-            getUnredeemedOutputs rpcConf testAddr >>=
+            getUnredeemedOutputs bitcoindConf testAddr >>=
             putStrLn . ("Success! " ++) . show
     addRoutes [
-        ("unspentOutputs/:address", unspentOutputHandler rpcConf)
+        ("unspentOutputs/:address", unspentOutputHandler bitcoindConf)
        ]
 
 
@@ -67,17 +67,3 @@ errorWithDescription code errStr = do
     modifyResponse $ setResponseStatus code (cs errStr)
     finishWith =<< getResponse
 
-testAddr = b58String "2N414xMNQaiaHCT5D7JamPz7hJEc9RG7469"
-
-
-
-
-
-
--- mainCmd :: IO ()
--- mainCmd = do
---     addr <- maybe (fail "Usage: <program> <bitcoin_address>")
---             (return . b58String . cs) . listToMaybe =<< getArgs
---     putStrLn $ "Unredeemed outputs:"
---     unredeemedOutputs <- getUnredeemedOutputs addr
---     print unredeemedOutputs

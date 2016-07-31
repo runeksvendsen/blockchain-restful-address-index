@@ -78,7 +78,7 @@ checkSpentAndConfirmData client afi@(AddressFundingInfo addr txid index _ _) =
             (\utxOut -> if utxOut `match` afi then return (Just afi) else return Nothing)
 
 getUnredeemedOutputs :: BTCRPCConf -> B58S.Base58String -> IO [AddressFundingInfo]
-getUnredeemedOutputs (BTCRPCConf host port user pass) addr =
+getUnredeemedOutputs (BTCRPCConf host port user pass _) addr =
     withClient host port user pass $
         \client -> do
             txiList <- searchRawTransactions client addr
