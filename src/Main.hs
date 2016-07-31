@@ -4,18 +4,17 @@ module Main where
 
 import           Prelude hiding (userError)
 
-import            Lib       (getUnredeemedOutputs)
-import            Config    (BTCRPCConf(..), getRPCConf)
+import           Lib       (getUnredeemedOutputs)
+import qualified Config as Conf
 
-import qualified  Network.Haskoin.Crypto as HC
-import qualified  Network.Haskoin.Constants as HCC
+import qualified Network.Haskoin.Crypto as HC
+import qualified Network.Haskoin.Constants as HCC
 
 import           Snap (Config, Snap, serveSnaplet)
 import           Snap.Snaplet (runSnaplet)
 import           Snap.Http.Server (defaultConfig, httpServe)
 
 import           Snap
--- import           Snap.Http.Server
 import           Snap.Http.Server.Config
 import           Data.Base58String.Bitcoin  (b58String)
 import           Control.Monad.IO.Class     (liftIO)
@@ -26,23 +25,25 @@ import           Data.String.Conversions    (cs)
 
 
 main :: IO ()
-main = do
+main = Conf.wrapArg $ \cfg _ -> do
     HCC.switchToTestnet3
-    serveSnaplet defaultConfig appInit
+    serveSnaplet defaultConfig (appInit cfg)
 
 
-appInit :: SnapletInit () ()
-appInit = makeSnaplet "BlockchainAddressIndex" "Blockchain RESTful address index" Nothing $ do
-    rpcConf <- liftIO . getRPCConf =<< getSnapletUserConfig
+appInit :: Conf.Config -> SnapletInit () ()
+appInit cfg = makeSnaplet "BlockchainAddressIndex" "Blockchain RESTful address index" Nothing $ do
+    rpcConf <- liftIO $ Conf.getRPCConf cfg
     liftIO $ putStrLn $ "Using Bitcoin Core endpoint: " ++
-            rpcHost rpcConf ++ ":" ++ show (rpcPort rpcConf)
+            Conf.rpcHost rpcConf ++ ":" ++ show (Conf.rpcPort rpcConf)
     liftIO $ putStr "Performing test request... " >>
             getUnredeemedOutputs rpcConf testAddr >>=
             putStrLn . ("Success! " ++) . show
-    addRoutes [ ("unspentOutputs/:address", unspentOutputHandler rpcConf) ]
+    addRoutes [
+        ("unspentOutputs/:address", unspentOutputHandler rpcConf)
+       ]
 
 
-unspentOutputHandler :: MonadSnap m => BTCRPCConf -> m ()
+unspentOutputHandler :: MonadSnap m => Conf.BTCRPCConf -> m ()
 unspentOutputHandler conf = do
     writeLBS . encodePretty . toJSON =<<
         liftIO . getUnredeemedOutputs conf .
