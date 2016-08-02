@@ -23,6 +23,7 @@ import           Data.Maybe (isJust, fromJust, listToMaybe)
 import           System.Environment (getArgs)
 import           Data.String.Conversions (cs)
 import           Data.Fixed (showFixed)
+import           Data.Maybe (catMaybes)
 
 
 -- | Holds information about an output paying to an address
@@ -83,10 +84,5 @@ getUnredeemedOutputs (BTCRPCConf host port user pass _) addr =
         \client -> do
             txiList <- searchRawTransactions client addr
             let txiListNewestFirst = reverse $ sortOn timestamp txiList
-
             let outsPayingAddress = concat $ fmap (outputsPayingToAddress addr) txiListNewestFirst
-
-            unredeemedOutputs <- return . map fromJust . filter isJust =<<
-                    forM outsPayingAddress (checkSpentAndConfirmData client)
-
-            return unredeemedOutputs
+            catMaybes <$> forM outsPayingAddress (checkSpentAndConfirmData client)
