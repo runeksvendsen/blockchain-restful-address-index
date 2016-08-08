@@ -17,7 +17,8 @@ import           Control.Monad.IO.Class     (liftIO)
 import           Data.String.Conversions    (cs)
 import qualified Network.Wai as Wai
 import qualified Network.Wai.Handler.Warp as Warp
-import  Servant
+import           Servant
+import qualified Web.HttpApiData as Web
 
 
 api :: Proxy Spec.BlockchainApi
@@ -36,7 +37,7 @@ server cfg = unspentOutputs :<|> publishTx
 app :: Conf.BTCRPCConf -> Wai.Application
 app rpccfg = serve api $ server rpccfg
 
-instance FromHttpApiData HC.Address where
+instance Web.FromHttpApiData HC.Address where
     parseUrlPiece txt = maybe
         (Left "failed to parse Bitcoin address") Right $
             HC.base58ToAddr (cs txt)
