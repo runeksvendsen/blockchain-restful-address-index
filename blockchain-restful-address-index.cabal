@@ -2,7 +2,7 @@ name:                blockchain-restful-address-index
 version:             0.1.0.0
 synopsis:            RESTful HTTP "addr-index bitcoind" wrapper
 description:         See README.md
-homepage:            https://github.com/githubuser/blockchain-restful-address-index#readme
+homepage:            https://github.com/runeksvendsen/blockchain-restful-address-index#readme
 license:             PublicDomain
 author:              Rune K. Svendsen
 maintainer:          runevsvend@gmail.com
@@ -80,4 +80,4 @@ executable rest-addr
 
 source-repository head
   type:     git
-  location: https://github.com/githubuser/blockchain-restful-address-index
+  location: https://github.com/runeksvendsen/blockchain-restful-address-index
