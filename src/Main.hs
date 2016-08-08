@@ -7,8 +7,8 @@
 module Main where
 
 import qualified APISpec.Blockchain as Spec
-import           Lib.FundingInfo.FundingInfo            (getUnredeemedOutputs)
-import           Lib.PublishTx.PublishTx    (bitcoindNetworkSumbitTx)
+import qualified Lib.FundingInfo.FundingInfo as Funding
+import qualified Lib.PublishTx.PublishTx as PubTx
 import qualified Config as Conf
 
 import qualified Network.Haskoin.Crypto as HC
@@ -18,6 +18,7 @@ import           Data.String.Conversions    (cs)
 import qualified Network.Wai as Wai
 import qualified Network.Wai.Handler.Warp as Warp
 import           Servant
+import qualified Control.Monad.Error.Class as Except
 import qualified Web.HttpApiData as Web
 
 
@@ -27,11 +28,11 @@ api = Proxy
 server :: Conf.BTCRPCConf -> Server Spec.BlockchainApi
 server cfg = unspentOutputs :<|> publishTx
     where
-        unspentOutputs addr = liftIO $ getUnredeemedOutputs cfg addr
+        unspentOutputs addr = liftIO $ Funding.getUnredeemedOutputs cfg addr
         publishTx tx =
-            liftIO (bitcoindNetworkSumbitTx cfg tx) >>=
+            liftIO (PubTx.bitcoindNetworkSumbitTx cfg tx) >>=
                 either
-                    (\e -> throwError $ err500 { errBody = cs e })
+                    (\e -> Except.throwError $ err500 { errBody = cs e })
                     return
 
 app :: Conf.BTCRPCConf -> Wai.Application
@@ -56,7 +57,7 @@ appInit cfg = do
             Conf.rpcHost bitcoindConf ++ ":" ++ show (Conf.rpcPort bitcoindConf)
     let testAddr = Conf.getTestAddress bitcoindConf
     putStr "Executing test command... " >>
-            getUnredeemedOutputs bitcoindConf testAddr >>=
+            Funding.getUnredeemedOutputs bitcoindConf testAddr >>=
             putStrLn . ("Success! " ++) . show
     return bitcoindConf
 
