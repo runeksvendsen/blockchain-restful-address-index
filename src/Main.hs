@@ -7,7 +7,7 @@
 module Main where
 
 import qualified APISpec.Blockchain as Spec
-import           Lib.FundingInfo            (getUnredeemedOutputs)
+import           Lib.FundingInfo.FundingInfo            (getUnredeemedOutputs)
 import           Lib.PublishTx.PublishTx    (bitcoindNetworkSumbitTx)
 import qualified Config as Conf
 
@@ -20,6 +20,9 @@ import qualified Network.Wai.Handler.Warp as Warp
 import  Servant
 
 
+api :: Proxy Spec.BlockchainApi
+api = Proxy
+
 server :: Conf.BTCRPCConf -> Server Spec.BlockchainApi
 server cfg = unspentOutputs :<|> publishTx
     where
@@ -31,7 +34,7 @@ server cfg = unspentOutputs :<|> publishTx
                     return
 
 app :: Conf.BTCRPCConf -> Wai.Application
-app rpccfg = serve Spec.api $ server rpccfg
+app rpccfg = serve api $ server rpccfg
 
 instance FromHttpApiData HC.Address where
     parseUrlPiece txt = maybe

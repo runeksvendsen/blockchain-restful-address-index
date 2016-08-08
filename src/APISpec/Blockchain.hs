@@ -4,22 +4,17 @@
 
 module APISpec.Blockchain
 (
-    BlockchainApi,
-    api
+    BlockchainApi
 )
 where
 
-import           Lib.FundingInfo            (AddressFundingInfo)
+import           Lib.FundingInfo.Types            (AddressFundingInfo)
 
 import qualified Network.Haskoin.Transaction as HT
 import qualified Network.Haskoin.Crypto as HC
 
-import  Servant
+import  Servant.API
 
-
-
-api :: Proxy BlockchainApi
-api = Proxy
 
 type BlockchainApi =
     -- eg. /outputs/14wjVnwHwMAXDr6h5Fw38shCWUB6RSEa63/unspent
