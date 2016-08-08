@@ -11,30 +11,71 @@ build-type:          Simple
 cabal-version:       >=1.10
 
 
+library
+  exposed-modules:     APISpec.Blockchain
+  ghc-options:         -W -O2 -threaded -with-rtsopts=-N
+
+  build-depends:       base                      >= 4     && < 5
+                     , text
+                     , base16-bytestring
+                     , hexstring
+                     , bitcoin-api
+                     , bitcoin-types
+                     , bitcoin-tx
+                     , base58string
+                     , haskoin-core
+                     , bytestring
+                     , mtl
+                     , transformers
+                     , aeson
+                     , aeson-pretty
+                     , binary
+                     , string-conversions
+                     , configurator
+                     , servant
+                     , servant-server
+                     , either
+
+  hs-source-dirs:      src
+  default-language:    Haskell2010
+  other-modules:       Config
+                       Lib.FundingInfo
+
+
 executable rest-addr
   hs-source-dirs:      src
   main-is:             Main.hs
-  ghc-options:         -main-is Main -threaded -rtsopts -with-rtsopts=-N
+  ghc-options:         -W -threaded -rtsopts -with-rtsopts=-N
   build-depends:       base
                      , text
+                     , base16-bytestring
+                     , hexstring
                      , bitcoin-api
                      , bitcoin-types
+                     , bitcoin-tx
                      , base58string
                      , haskoin-core
-                     , snap-core == 0.9.8.0
-                     , bytestring                >= 0.9.1 && < 0.11
-                     , MonadCatchIO-transformers >= 0.2.1 && < 0.4
-                     , mtl                       >= 2     && < 3
-                     , snap-server               >= 0.9   && < 0.10
+                     , bytestring
+                     , mtl
                      , transformers
-                     , snap
                      , aeson
                      , aeson-pretty
+                     , binary
                      , http-client
                      , string-conversions
                      , configurator
+                     , servant
+                     , servant-server
+                     , wai
+                     , warp
+                     , either
+
+  other-modules:       Lib.FundingInfo
+                       ,Lib.PublishTx.PublishTx
+                       ,Lib.PublishTx.Types
+                       ,Config
+
   default-language:    Haskell2010
-  other-modules:       Lib,Config
 
 
 source-repository head

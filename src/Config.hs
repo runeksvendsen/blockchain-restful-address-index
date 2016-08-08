@@ -41,10 +41,10 @@ instance Configured BitcoinNet where
     convert (String "test") = return Testnet3
     convert _ = Nothing
 
-testAddrTestnet = b58String "2N414xMNQaiaHCT5D7JamPz7hJEc9RG7469"
-testAddrLivenet = b58String "14wjVnwHwMAXDr6h5Fw38shCWUB6RSEa63"
+testAddrTestnet = "2N414xMNQaiaHCT5D7JamPz7hJEc9RG7469"
+testAddrLivenet = "14wjVnwHwMAXDr6h5Fw38shCWUB6RSEa63"
 
-getTestAddress :: BTCRPCConf -> Base58String
+getTestAddress :: BTCRPCConf -> HC.Address
 getTestAddress (BTCRPCConf _ _ _ _ Mainnet) = testAddrLivenet
 getTestAddress (BTCRPCConf _ _ _ _ Testnet3) = testAddrTestnet
 
