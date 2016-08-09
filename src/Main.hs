@@ -6,12 +6,12 @@
 
 module Main where
 
+import           Orphans ()
+
 import qualified APISpec.Blockchain as Spec
 import qualified Lib.FundingInfo.FundingInfo as Funding
 import qualified Lib.PublishTx.PublishTx as PubTx
 import qualified Config as Conf
-
-import qualified Network.Haskoin.Crypto as HC
 
 import           Control.Monad.IO.Class     (liftIO)
 import           Data.String.Conversions    (cs)
@@ -19,7 +19,6 @@ import qualified Network.Wai as Wai
 import qualified Network.Wai.Handler.Warp as Warp
 import           Servant
 import qualified Control.Monad.Error.Class as Except
-import qualified Web.HttpApiData as Web
 import qualified Data.Maybe as Maybe
 
 
@@ -35,18 +34,10 @@ server cfg = unspentOutputs :<|> publishTx
 app :: Conf.BTCRPCConf -> Wai.Application
 app rpccfg = serve api $ server rpccfg
 
-instance Web.FromHttpApiData HC.Address where
-    parseUrlPiece txt = maybe
-        (Left "failed to parse Bitcoin address") Right $
-            HC.base58ToAddr (cs txt)
-
-
-
 main :: IO ()
 main = Conf.wrapArg $ \cfg _ -> do
     maybePort <- Conf.getEnvPORT
     app <$> appInit cfg >>= Warp.run (Maybe.fromMaybe 8000 maybePort)
-
 
 appInit :: Conf.Config -> IO Conf.BTCRPCConf
 appInit cfg = do

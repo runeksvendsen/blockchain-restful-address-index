@@ -20,4 +20,4 @@ type BlockchainApi =
     -- eg. /outputs/14wjVnwHwMAXDr6h5Fw38shCWUB6RSEa63/unspent
     "outputs" :> Capture "address" HC.Address :> "unspent" :> Get '[JSON] [AddressFundingInfo]
     :<|>
-    "publishTx" :> ReqBody '[JSON] HT.Tx :> Post '[JSON] HT.TxHash
+    "publishTx" :> ReqBody '[PlainText] HT.Tx :> Post '[JSON] HT.TxHash
