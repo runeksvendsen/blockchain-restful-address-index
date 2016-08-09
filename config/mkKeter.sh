@@ -12,9 +12,9 @@ BINDIR="$(stack path --local-install-root)/bin"
 BUNDLENAME="rest-addr-$CONF.keter"
 
 cp "$BINDIR/$BINNAME" ./
-strip $BINNAME
+#strip $BINNAME
 
 tar czf ../$BUNDLENAME $BINNAME config
 
-echo "Created file:" >2
-echo "$FILENAME"
+echo "Success! Created file:" >&2
+echo "$BUNDLENAME"
