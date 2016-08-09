@@ -50,7 +50,6 @@ executable rest-addr
                      , mtl
                      , transformers
                      , aeson
-                     , aeson-pretty
                      , binary
                      , http-client
                      , string-conversions
@@ -63,9 +62,11 @@ executable rest-addr
                      , either
 
   other-modules:       Lib.FundingInfo.FundingInfo
-                       ,Lib.PublishTx.PublishTx
-                       ,Lib.PublishTx.Types
-                       ,Config
+                     , APISpec.Blockchain
+                     , Lib.FundingInfo.Types
+                     , Lib.PublishTx.PublishTx
+                     , Lib.PublishTx.Types
+                     , Config
 
   default-language:    Haskell2010
 

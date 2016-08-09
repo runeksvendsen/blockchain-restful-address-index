@@ -29,11 +29,7 @@ server :: Conf.BTCRPCConf -> Server Spec.BlockchainApi
 server cfg = unspentOutputs :<|> publishTx
     where
         unspentOutputs addr = liftIO $ Funding.getUnredeemedOutputs cfg addr
-        publishTx tx =
-            liftIO (PubTx.bitcoindNetworkSumbitTx cfg tx) >>=
-                either
-                    (\e -> Except.throwError $ err500 { errBody = cs e })
-                    return
+        publishTx tx = tryIOReq $ PubTx.bitcoindNetworkSumbitTx cfg tx
 
 app :: Conf.BTCRPCConf -> Wai.Application
 app rpccfg = serve api $ server rpccfg
@@ -60,4 +56,12 @@ appInit cfg = do
             Funding.getUnredeemedOutputs bitcoindConf testAddr >>=
             putStrLn . ("Success! " ++) . show
     return bitcoindConf
+
+
+
+-- Util
+tryIOReq :: IO (Either String a) -> Handler a
+tryIOReq req = liftIO req >>= either
+    (\e -> Except.throwError $ err500 { errBody = cs e })
+     return
 

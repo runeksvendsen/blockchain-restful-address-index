@@ -1,0 +1,12 @@
+stanzas:
+    - type: webapp
+      exec: ../rest-addr
+      args:
+        - config/server.cfg
+      host: blockchaintest.runeks.me
+    #- type: background
+    #  exec: ../ChanStore
+    #  args:
+    #    - /home/rune/code/restful-payment-channel-server/config/live/config/store.cfg
+    #  restart-count: 999
+    #  restart-delay-seconds: 1
