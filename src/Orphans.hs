@@ -20,6 +20,9 @@ instance Web.FromHttpApiData HC.Address where
         (Left "failed to parse Bitcoin address") Right $
             HC.base58ToAddr (cs txt)
 
+instance Web.ToHttpApiData HC.Address where
+    toUrlPiece = cs . HC.addrToBase58
+
 instance Content.MimeUnrender Content.PlainText HT.Tx where
     mimeUnrender _ bs = decodeHex (cs bs) >>=
              fmapL ("failed to decode transaction: " ++) . HU.decodeToEither
