@@ -4,7 +4,7 @@ packages:
 - '.'
 - location:
     git: https://github.com/runeksvendsen/haskell-bitcoin-api.git
-    commit: 7ff62829fb4891ce2f7aeb88ac40ef02b69f37f3
+    commit: 6fe22346bd83678934e29246d313e581a8d0fdf7
   extra-dep: true
 
 # Dependency packages to be pulled from upstream that are not in the resolver

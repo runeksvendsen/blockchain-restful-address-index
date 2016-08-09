@@ -16,5 +16,5 @@ cp "$BINDIR/$BINNAME" ./
 
 tar czf ../$BUNDLENAME $BINNAME config
 
-echo "Success! Created file:" >&2
+echo "Successfully created new bundle" >&2
 echo "$BUNDLENAME"
