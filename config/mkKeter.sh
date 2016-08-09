@@ -17,4 +17,5 @@ strip $BINNAME
 
 tar czf $BUNDLENAME $BINNAME config
 
-echo "Created $FILENAME"
+echo "Created file:" >2
+echo "$FILENAME"
