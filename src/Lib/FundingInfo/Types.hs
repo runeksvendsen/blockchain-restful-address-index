@@ -4,15 +4,34 @@ module Lib.FundingInfo.Types where
 
 import qualified Data.Bitcoin.Types  as BT
 import qualified Data.Base58String.Bitcoin as B58S
-import           Data.Aeson (Value(Object, String), FromJSON, ToJSON, parseJSON, toJSON,
-                            fromJSON, (.=), (.:), object)
-import           Data.Word (Word32)
-import           Data.String.Conversions (cs)
-import           Data.Fixed (showFixed)
+import qualified Network.Haskoin.Transaction as HT
+import qualified Network.Haskoin.Crypto as HC
 
+import           Data.Aeson (ToJSON, toJSON,
+                             object, (.=), encode, decode)
+import           Data.Word (Word32)
+import           Data.Fixed (Fixed(MkFixed))
+import qualified Data.Maybe as Maybe
+
+toHaskoin :: AddressFundingInfoRes -> AddressFundingInfo
+toHaskoin (AddressFundingInfoRes addr txid vout numConfs (MkFixed valInt)) =
+    AddressFundingInfo
+        (Maybe.fromJust $ decode $ encode addr)
+        (Maybe.fromJust $ decode $ encode txid)
+        vout
+        numConfs
+        valInt
 
 -- | Holds information about an output paying to an address
 data AddressFundingInfo = AddressFundingInfo {
+    _asiDestAddress  ::  HC.Address
+   ,_asiFundingTxId  ::  HT.TxHash
+   ,_asiFundingVout  ::  Word32
+   ,_asiConfs        ::  Integer
+   ,_asiValue        ::  Integer
+} deriving (Eq, Show)
+
+data AddressFundingInfoRes = AddressFundingInfoRes {
     asiDestAddress  ::  B58S.Base58String
    ,asiFundingTxId  ::  BT.TransactionId
    ,asiFundingVout  ::  Word32
@@ -27,6 +46,6 @@ instance ToJSON AddressFundingInfo where
             "funding_txid" .= txid,
             "funding_vout" .= vout,
             "confirmations" .= confs,
-            "value" .= (String . cs $ showFixed False val)
+            "value" .= val
         ]
 
