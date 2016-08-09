@@ -9,7 +9,10 @@ import qualified Network.Haskoin.Util as HU
 import qualified Web.HttpApiData as Web
 import qualified Servant.API.ContentTypes as Content
 import           Data.String.Conversions (cs)
+import           Data.EitherR (fmapL)
 
+
+decodeHex bs = maybe (Left "invalid hex string") Right (HU.decodeHex bs)
 
 instance Web.FromHttpApiData HC.Address where
     parseUrlPiece txt = maybe
@@ -17,7 +20,10 @@ instance Web.FromHttpApiData HC.Address where
             HC.base58ToAddr (cs txt)
 
 instance Content.MimeUnrender Content.PlainText HT.Tx where
-    mimeUnrender _ = undefined
+    mimeUnrender _ bs = decodeHex (cs bs) >>=
+             fmapL ("failed to decode transaction: " ++) . HU.decodeToEither
 
-instance Content.MimeUnrender Content.PlainText HT.TxHash where
-    mimeUnrender _ = maybe (Left "Failed to decode TxHash") Right . HT.hexToTxHash . cs
+instance Content.MimeRender Content.PlainText HT.TxHash where
+    mimeRender _ = cs . HT.txHashToHex
+
+

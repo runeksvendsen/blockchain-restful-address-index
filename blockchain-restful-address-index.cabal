@@ -60,6 +60,7 @@ executable rest-addr
                      , wai
                      , warp
                      , either
+                     , errors
 
   other-modules:       Lib.FundingInfo.FundingInfo
                      , APISpec.Blockchain
