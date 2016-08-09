@@ -6,7 +6,6 @@ module Lib.PublishTx.PublishTx
 ) where
 
 import           Config
-import           Lib.PublishTx.Types
 
 import           Control.Monad.IO.Class (liftIO, MonadIO)
 import           Control.Exception (try)
