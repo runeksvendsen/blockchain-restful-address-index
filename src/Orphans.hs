@@ -4,7 +4,7 @@ module Orphans where
 
 import qualified Network.Haskoin.Crypto as HC
 import qualified Network.Haskoin.Transaction as HT
-import qualified Data.Aeson as JSON
+import qualified Network.Haskoin.Util as HU
 
 import qualified Web.HttpApiData as Web
 import qualified Servant.API.ContentTypes as Content
@@ -17,4 +17,7 @@ instance Web.FromHttpApiData HC.Address where
             HC.base58ToAddr (cs txt)
 
 instance Content.MimeUnrender Content.PlainText HT.Tx where
-    mimeUnrender _ = JSON.eitherDecode
+    mimeUnrender _ = undefined
+
+instance Content.MimeUnrender Content.PlainText HT.TxHash where
+    mimeUnrender _ = maybe (Left "Failed to decode TxHash") Right . HT.hexToTxHash . cs

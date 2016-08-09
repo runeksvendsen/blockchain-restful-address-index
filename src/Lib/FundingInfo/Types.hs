@@ -7,11 +7,13 @@ import qualified Data.Base58String.Bitcoin as B58S
 import qualified Network.Haskoin.Transaction as HT
 import qualified Network.Haskoin.Crypto as HC
 
-import           Data.Aeson (ToJSON, toJSON,
+import           Data.Aeson (ToJSON, FromJSON, toJSON, parseJSON, Value(Object), (.:),
                              object, (.=), encode, decode)
 import           Data.Word (Word32)
 import           Data.Fixed (Fixed(MkFixed))
 import qualified Data.Maybe as Maybe
+import           Control.Monad (mzero)
+
 
 toHaskoin :: AddressFundingInfoRes -> AddressFundingInfo
 toHaskoin (AddressFundingInfoRes addr txid vout numConfs (MkFixed valInt)) =
@@ -24,19 +26,19 @@ toHaskoin (AddressFundingInfoRes addr txid vout numConfs (MkFixed valInt)) =
 
 -- | Holds information about an output paying to an address
 data AddressFundingInfo = AddressFundingInfo {
-    _asiDestAddress  ::  HC.Address
-   ,_asiFundingTxId  ::  HT.TxHash
-   ,_asiFundingVout  ::  Word32
-   ,_asiConfs        ::  Integer
-   ,_asiValue        ::  Integer
+    asiDestAddress  ::  HC.Address
+   ,asiFundingTxId  ::  HT.TxHash
+   ,asiFundingVout  ::  Word32
+   ,asiConfs        ::  Integer
+   ,asiValue        ::  Integer
 } deriving (Eq, Show)
 
 data AddressFundingInfoRes = AddressFundingInfoRes {
-    asiDestAddress  ::  B58S.Base58String
-   ,asiFundingTxId  ::  BT.TransactionId
-   ,asiFundingVout  ::  Word32
-   ,asiConfs        ::  Integer
-   ,asiValue        ::  BT.Btc
+    asiDestAddress'  ::  B58S.Base58String
+   ,asiFundingTxId'  ::  BT.TransactionId
+   ,asiFundingVout'  ::  Word32
+   ,asiConfs'        ::  Integer
+   ,asiValue'        ::  BT.Btc
 } deriving (Eq, Show)
 
 instance ToJSON AddressFundingInfo where
@@ -49,3 +51,12 @@ instance ToJSON AddressFundingInfo where
             "value" .= val
         ]
 
+instance FromJSON AddressFundingInfo where
+    parseJSON (Object o) =
+        AddressFundingInfo <$>
+            o .: "address" <*>
+            o .: "funding_txid" <*>
+            o .: "funding_vout" <*>
+            o .: "confirmations"  <*>
+            o .: "value"
+    parseJSON _ = mzero

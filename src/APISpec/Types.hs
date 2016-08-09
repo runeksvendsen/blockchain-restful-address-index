@@ -1,6 +1,6 @@
 module APISpec.Types
 (
-    module Lib.FundingInfo.Types
+    AddressFundingInfo(..)
 )
 where
 
