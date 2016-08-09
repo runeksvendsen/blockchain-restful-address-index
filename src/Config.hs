@@ -6,7 +6,7 @@ module Config
     ,getRPCConf
     ,configLookupOrFail
     ,loadConfig
-    ,wrapArg
+    ,wrapArg,getEnvPORT
     ,getTestAddress
     ,setBitcoinNetwork
 
@@ -18,12 +18,11 @@ import qualified Data.Text as T
 
 import qualified Network.Haskoin.Crypto as HC
 import qualified Network.Haskoin.Constants as HCC
-import qualified Data.ByteString as BS
 import qualified Data.Configurator as Conf
 import           Data.Configurator.Types
 import           Data.String.Conversions (cs)
-import           System.Environment         (getArgs, getProgName)
-import           Data.Base58String.Bitcoin  (Base58String, b58String)
+import qualified System.Environment as Sys
+import qualified Text.Read as Read
 
 
 data BTCRPCConf = BTCRPCConf {
@@ -74,8 +73,8 @@ loadConfig confFile = Conf.load [Conf.Required confFile]
 
 wrapArg :: (Config -> String -> IO ()) -> IO ()
 wrapArg main' = do
-    args <- getArgs
-    prog <- getProgName
+    args <- Sys.getArgs
+    prog <- Sys.getProgName
     if  length args < 1 then
             putStrLn $ "Usage: " ++ prog ++ " /path/to/config.cfg"
         else do
@@ -83,3 +82,9 @@ wrapArg main' = do
             putStrLn $ "Using config file " ++ show cfgFile
             cfg <- loadConfig cfgFile
             main' cfg cfgFile
+
+
+getEnvPORT :: IO (Maybe Int)
+getEnvPORT =
+    --  Get port from PORT environment variable, if it contains a valid port number
+    maybe Nothing Read.readMaybe <$> Sys.lookupEnv "PORT"

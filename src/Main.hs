@@ -20,6 +20,7 @@ import qualified Network.Wai.Handler.Warp as Warp
 import           Servant
 import qualified Control.Monad.Error.Class as Except
 import qualified Web.HttpApiData as Web
+import qualified Data.Maybe as Maybe
 
 
 api :: Proxy Spec.BlockchainApi
@@ -42,8 +43,10 @@ instance Web.FromHttpApiData HC.Address where
 
 
 main :: IO ()
-main = Conf.wrapArg $ \cfg _ ->
-    app <$> appInit cfg >>= Warp.run 8000
+main = Conf.wrapArg $ \cfg _ -> do
+    maybePort <- Conf.getEnvPORT
+    app <$> appInit cfg >>= Warp.run (Maybe.fromMaybe 8000 maybePort)
+
 
 appInit :: Conf.Config -> IO Conf.BTCRPCConf
 appInit cfg = do
@@ -56,7 +59,6 @@ appInit cfg = do
             Funding.getUnredeemedOutputs bitcoindConf testAddr >>=
             putStrLn . ("Success! " ++) . show
     return bitcoindConf
-
 
 
 -- Util
