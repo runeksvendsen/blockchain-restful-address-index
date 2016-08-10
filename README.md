@@ -10,7 +10,7 @@ Exposes two resources:
   * Successful response body: Hex-encoded transaction ID
 
 ### Limitations:
-Unspent outputs are not returned until they have at least a single confirmation. However, if a new, unconfirmed transaction redeems an output, this output will not be included in the returned results. In other words, you cannot get information about an unspent output until it has at least one confirmation, but it will disappear from the return result as a soon as a transaction appears which spends it.
+Unspent outputs are not returned until they have at least a single confirmation. However, if a new, unconfirmed transaction redeems an output, this output will not be included in the returned results. In other words, you cannot get information about an unspent output until it has at least one confirmation, but the output will disappear from the return result as a soon as a spending transaction, confirmed or not, appears.
 
 ### Example requests (TODO):
 
