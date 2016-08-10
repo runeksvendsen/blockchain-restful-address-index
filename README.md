@@ -1,8 +1,8 @@
 ## RESTful Bitcoin address index server
 
-Thin, RESTful HTTP server-wrapper for [Bitcoin Core w/ address-index patch](https://github.com/btcdrak/bitcoin/tree/addrindex-0.12).
+Thin, RESTful HTTP server-wrapper for [address-index patch-Bitcoin Core](https://github.com/btcdrak/bitcoin/tree/addrindex-0.12).
 
-Exposes a two resources:
+Exposes two resources:
 
 * `/outputs/<address>/unspent` (list of all unspent outputs paying to `<address>`)
 * `/publishTx`
