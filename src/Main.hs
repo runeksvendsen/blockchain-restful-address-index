@@ -25,7 +25,7 @@ import qualified Data.Maybe as Maybe
 api :: Proxy Spec.BlockchainApi
 api = Proxy
 
-server :: Conf.BTCRPCConf -> Server Spec.BlockchainApi
+server :: Conf.BTCRPCConf -> Server Spec.BlockchainApi --Conf.BTCRPCConf ->
 server cfg = unspentOutputs :<|> publishTx
     where
         unspentOutputs addr = liftIO $ Funding.getUnredeemedOutputs cfg addr

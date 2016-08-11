@@ -5,5 +5,5 @@ module APISpec.Types
 )
 where
 
-import Lib.FundingInfo.Types
+import Lib.FundingInfo.Types (AddressFundingInfo(..))
 import Orphans

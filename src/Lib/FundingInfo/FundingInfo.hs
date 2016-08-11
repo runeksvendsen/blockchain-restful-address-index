@@ -3,12 +3,14 @@
 module Lib.FundingInfo.FundingInfo
 (
     module Lib.FundingInfo.FundingInfo
+   ,module Lib.FundingInfo.Internal.Types
    ,module Lib.FundingInfo.Types
 )
 
 where
 
 import           Lib.FundingInfo.Types
+import           Lib.FundingInfo.Internal.Types
 import           Config (BTCRPCConf(..))
 
 import           Network.Bitcoin.Api.Client (Client, withClient)
