@@ -5,7 +5,7 @@ Thin, RESTful HTTP server-wrapper for [address-index patch-Bitcoin Core](https:/
 Exposes two resources:
 
 * `/outputs/<address>/unspent` (list of all unspent outputs paying to `<address>`)
-* `/publishTx`
+* `/publishTx` [**CURRENTLY BROKEN**]
   * Request body: Hex-encoded transaction data (**Content-Type: text/plain; charset=utf-8**)
   * Successful response body: Hex-encoded transaction ID
 
