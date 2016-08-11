@@ -13,7 +13,7 @@ Thin RESTful HTTP wrapper for [address-index patched Bitcoin Core](https://githu
 ### Limitations
 Unspent outputs are not returned until they have at least a single confirmation. However, if a new, unconfirmed transaction redeems an output, this output will not be included in the returned results. In other words, you cannot get information about an unspent output until it has at least one confirmation, but the output will disappear from the return result as a soon as a spending transaction, confirmed or not, appears.
 
-### Request+response data / Examples:
+### Example requests
 
     $ curl --silent https://blockchain.runeks.me/outputs/17RGKU1iHhiTBLoBFFFSJ6jX66NriVoanz/unspent | jq
     [
