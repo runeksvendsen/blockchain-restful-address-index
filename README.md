@@ -2,18 +2,18 @@
 
 Thin RESTful HTTP wrapper for [address-index patched Bitcoin Core](https://github.com/btcdrak/bitcoin/tree/addrindex-0.12).
 
-Exposes two resources:
+### Exposed resources
 
 * **GET** `/outputs/<address>/unspent` (list of all unspent outputs paying to `<address>`)
-  * Response body: `Content-Type: application/json` (see example below)
+  * Response body: `Content-Type: application/json`
 * **POST** `/publishTx` (push hex-encoded transaction to the network) 
   * Request body: `Content-Type: text/plain; charset=utf-8`
   * Response body: Hex-encoded transaction ID (also `Content-Type: text/plain; charset=utf-8`)
 
-### Limitations:
+### Limitations
 Unspent outputs are not returned until they have at least a single confirmation. However, if a new, unconfirmed transaction redeems an output, this output will not be included in the returned results. In other words, you cannot get information about an unspent output until it has at least one confirmation, but the output will disappear from the return result as a soon as a spending transaction, confirmed or not, appears.
 
-### Example requests (TODO):
+### Request+response data / Examples:
 
     $ curl --silent https://blockchain.runeks.me/outputs/17RGKU1iHhiTBLoBFFFSJ6jX66NriVoanz/unspent | jq
     [
