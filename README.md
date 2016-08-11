@@ -1,4 +1,4 @@
-## RESTful Bitcoin address index server
+# RESTful Bitcoin address index server
 
 Thin RESTful HTTP wrapper for [address-index patched Bitcoin Core](https://github.com/btcdrak/bitcoin/tree/addrindex-0.12).
 
