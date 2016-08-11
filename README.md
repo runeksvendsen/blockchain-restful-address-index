@@ -5,7 +5,7 @@ Thin RESTful HTTP wrapper for [address-index patched Bitcoin Core](https://githu
 Exposes two resources:
 
 * **GET** `/outputs/<address>/unspent` (list of all unspent outputs paying to `<address>`)
-  * Response body: `Content-Type: application/json`
+  * Response body: `Content-Type: application/json` (see example below)
 * **POST** `/publishTx` (push hex-encoded transaction to the network) 
   * Request body: `Content-Type: text/plain; charset=utf-8`
   * Response body: Hex-encoded transaction ID (also `Content-Type: text/plain; charset=utf-8`)
