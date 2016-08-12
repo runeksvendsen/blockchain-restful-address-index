@@ -30,6 +30,9 @@ First, get *addr-index patched* Bitcoin Core up and running by following [this g
 
 The RESTful server executable (`rest-addr`) takes as its only argument the path to a config file. The config file specifies the Bitcoin Core RPC configuration (hostname, port, user, password) and also whether this Bitcoin Core is running on livenet or testnet. Example config files can be found in <a href="config/">config/</a>, which has configuration files for Bitcoin (live) and testnet3 (<a href="config/live/config/server.cfg">config/live/config/server.cfg</a> and <a href="config/test/config/server.cfg">config/test/config/server.cfg</a>, respectfully). 
 
+### Bugs/questions/comments
+If you find a bug somewhere - either in the code, documentation or elsewhere - create an issue. Do the same if you have any questions.
+
 ### Example requests
     $ curl --silent https://blockchain.runeks.me/outputs/17RGKU1iHhiTBLoBFFFSJ6jX66NriVoanz/unspent | jq
     [
