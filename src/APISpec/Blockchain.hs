@@ -26,6 +26,7 @@ type BlockchainApi =
 -- type GetOutputs =
 
 
+
 -- Example URLs, in order:
 --------------------------
 -- GET  /outputs/14wjVnwHwMAXDr6h5Fw38shCWUB6RSEa63/all
