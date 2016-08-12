@@ -13,7 +13,7 @@ Thin RESTful HTTP wrapper for [address-index patched Bitcoin Core](https://githu
   * Response body: Hex-encoded transaction ID (also `Content-Type: text/plain; charset=utf-8`)
 
 ### Limitations
-An output needs at least a single confirmation before it appears in the returned list (it needs to be in a block). However, if a new, unconfirmed transaction redeems this output, it will not be included in the returned results. In other words, you cannot get information about an output until it has at least one confirmation, but the output will disappear from the list of unspent outputs as a soon as a spending transaction appears, confirmed or not.
+An output needs at least a single confirmation before it appears in the returned list (it needs to be in a block). However, if a new unconfirmed transaction appears which redeems this output, it will not be included in the list of unspent outputs. In other words, you cannot get information about an output until it has at least one confirmation, but the output will disappear from the list of unspent outputs as a soon as a spending transaction appears.
 
 So far, pagination is also unsupported, because I can't get bitcoind to do it: https://github.com/btcdrak/bitcoin/issues/11
 
