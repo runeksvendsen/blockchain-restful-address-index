@@ -26,11 +26,10 @@ toHaskoin (AddressFundingInfoRes addr txid vout numConfs (MkFixed valInt)) =
         numConfs
         valInt
 
-
 data AddressFundingInfoRes = AddressFundingInfoRes {
-    asiDestAddress'  ::  B58S.Base58String
-   ,asiFundingTxId'  ::  BT.TransactionId
-   ,asiFundingVout'  ::  Word32
-   ,asiConfs'        ::  Integer
-   ,asiValue'        ::  BT.Btc
+    asiDestAddress'  :: B58S.Base58String
+   ,asiFundingTxId'  :: BT.TransactionId
+   ,asiFundingVout'  :: Word32
+   ,asiConfs'        :: Integer
+   ,asiValue'        :: BT.Btc
 } deriving (Eq, Show)

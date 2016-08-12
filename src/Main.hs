@@ -26,10 +26,11 @@ api :: Proxy Spec.BlockchainApi
 api = Proxy
 
 server :: Conf.BTCRPCConf -> Server Spec.BlockchainApi --Conf.BTCRPCConf ->
-server cfg = unspentOutputs :<|> publishTx
+server cfg = allOutputs :<|> unspentOutputs :<|> publishTx
     where
-        unspentOutputs addr = liftIO $ Funding.getUnredeemedOutputs cfg addr
-        publishTx tx = tryIOReq $ PubTx.bitcoindNetworkSumbitTx cfg tx
+        allOutputs addr     = liftIO   $ Funding.getAllOutputs cfg addr
+        unspentOutputs addr = liftIO   $ Funding.getUnredeemedOutputs cfg addr
+        publishTx tx        = tryIOReq $ PubTx.bitcoindNetworkSumbitTx cfg tx
 
 app :: Conf.BTCRPCConf -> Wai.Application
 app rpccfg = serve api $ server rpccfg
