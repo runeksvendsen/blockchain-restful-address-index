@@ -17,8 +17,18 @@ Unspent outputs are not returned until they have at least a single confirmation.
 
 So far, pagination is also unsupported, because I can't get bitcoind to do it: https://github.com/btcdrak/bitcoin/issues/11
 
-### Example requests
+### Building
+Building the server requires the build tool *stack*, which is available in Ubuntu 16.04 as the `haskell-stack` package. For distributions without the `stack` build tool available, install it [using this command](https://docs.haskellstack.org/en/stable/README/#how-to-install), and remove the `haskell-stack` package from the `apt-get install` line.
 
+    apt-get update && apt-get install -y autoconf autogen libtool xz-utils git-core haskell-stack
+    git clone https://github.com/runeksvendsen/blockchain-restful-address-index.git
+    cd blockchain-restful-address-index/
+    stack setup && stack build
+
+### Running
+The server `rest-addr` executable takes as its only argument the path to its config file. Example config files can be found in <a href="config/">config/</a>, which has configuration files for Bitcoin (live) and testnet3 (<a href="config/live/config/server.cfg">config/live/config/server.cfg</a> and <a href="config/test/config/server.cfg">config/test/config/server.cfg</a>, respectfully).
+
+### Example requests
     $ curl --silent https://blockchain.runeks.me/outputs/17RGKU1iHhiTBLoBFFFSJ6jX66NriVoanz/unspent | jq
     [
       {
