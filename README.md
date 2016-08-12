@@ -4,14 +4,18 @@ Thin RESTful HTTP wrapper for [address-index patched Bitcoin Core](https://githu
 
 ### Exposed resources
 
-* **GET** `/outputs/<address>/unspent` (list of all unspent outputs paying to `<address>`)
+* **GET** `/outputs/<address>/all` (list of all outputs paying to `<address>`)
   * Response body: `Content-Type: application/json`
-* **POST** `/publishTx` (push hex-encoded transaction to the network) 
-  * Request body: `Content-Type: text/plain; charset=utf-8`
+* **GET** `/outputs/<address>/unspent` (list of all **unspent** outputs paying to `<address>`)
+  * Response body: `Content-Type: application/json`
+* **POST** `/publishTx` (publish transaction to the network) 
+  * Request body: Hex-encoded transaction (`Content-Type: text/plain; charset=utf-8`)
   * Response body: Hex-encoded transaction ID (also `Content-Type: text/plain; charset=utf-8`)
 
 ### Limitations
 Unspent outputs are not returned until they have at least a single confirmation. However, if a new, unconfirmed transaction redeems an output, this output will not be included in the returned results. In other words, you cannot get information about an unspent output until it has at least one confirmation, but the output will disappear from the return result as a soon as a spending transaction, confirmed or not, appears.
+
+So far, pagination is also unsupported, because I can't get bitcoind to do it: https://github.com/btcdrak/bitcoin/issues/11
 
 ### Example requests
 
