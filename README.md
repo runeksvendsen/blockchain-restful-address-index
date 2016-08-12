@@ -25,8 +25,10 @@ Building the server requires the build tool *stack*, which is available in Ubunt
     cd blockchain-restful-address-index/
     stack setup && stack build
 
-### Example requests
+### Running
+The server `rest-addr` executable takes as its only argument the path to its config file. Example config files can be found in <a href="config/">config/</a>, which has configuration files for Bitcoin (live) and testnet3 (<a href="config/live/config/server.cfg">config/live/config/server.cfg</a> and <a href="config/test/config/server.cfg">config/test/config/server.cfg</a>).
 
+### Example requests
     $ curl --silent https://blockchain.runeks.me/outputs/17RGKU1iHhiTBLoBFFFSJ6jX66NriVoanz/unspent | jq
     [
       {
