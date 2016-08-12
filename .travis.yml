@@ -1,0 +1,68 @@
+#sudo: false
+# use Trusty image
+sudo: required
+dist: trusty
+
+cache:
+    directories:
+        - $HOME/.ghc
+        - $HOME/.cabal
+        - $HOME/.stack
+
+matrix:
+  include:
+    ## -STACK
+    - env: BUILD=stack GHCVER=7.10.3 STACK_YAML=stack.yaml
+      compiler: ": #stack 7.10.3"
+      addons: {apt: {packages: [cabal-install-head,ghc-7.10.3,libssl-dev,libleveldb-dev], sources: [hvr-ghc]}}
+
+    #- env: BUILD=stack STACK_YAML=stack.yaml
+    #  compiler: ": #stack 7.10.3 osx"
+    #  os: osx
+
+#  allow_failures:
+#    - env: BUILD=cabal CABALVER=head GHCVER=head
+
+
+before_install:
+ - unset CC
+ - case "$BUILD" in
+     stack)
+       export PATH=$HOME/.local/bin:/opt/ghc/$GHCVER/bin:$PATH;;
+     cabal)
+       export PATH=$HOME/.cabal/bin:/opt/ghc/$GHCVER/bin:/opt/cabal/$CABALVER/bin:$PATH;;
+   esac
+ - ./.travis-setup.sh
+
+install:
+ - echo "$(ghc --version) [$(ghc --print-project-git-commit-id 2> /dev/null || echo '?')]"
+ - case "$BUILD" in
+     stack)
+       stack install;;
+     cabal)
+       cabal --version;
+       travis_retry cabal update;
+       rm -f $(stack path --dist-dir)/stack-*.tar.gz;
+       stack sdist --pvp-bounds=both;
+       tar xf $(stack path --dist-dir)/stack-*.tar.gz --wildcards --strip-components=1 '*/stack.cabal';
+       cabal install --only-dependencies --enable-tests --enable-benchmarks --force-reinstalls --ghc-options=-O0;;
+   esac
+
+script:
+ - case "$BUILD" in
+     stack)
+       stack --no-terminal test --haddock --no-haddock-deps;;
+     cabal)
+       cabal configure --enable-tests --enable-benchmarks -v2 --ghc-options="-O0 -Werror";
+       cabal build;
+       cabal test;
+       cabal check;
+       cabal sdist;
+       cabal copy;
+       cd test/integration;
+       true stack setup;
+       true stack test;
+       cd ../..;
+       SRC_TGZ=$(cabal info . | awk '{print $2;exit}').tar.gz &&
+       (cd dist && cabal install --force-reinstalls "$SRC_TGZ");;
+   esac
