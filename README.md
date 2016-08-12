@@ -26,7 +26,9 @@ Building the server requires the build tool *stack*, which is available in Ubunt
     stack setup && stack build
 
 ### Running
-The server `rest-addr` executable takes as its only argument the path to its config file. Example config files can be found in <a href="config/">config/</a>, which has configuration files for Bitcoin (live) and testnet3 (<a href="config/live/config/server.cfg">config/live/config/server.cfg</a> and <a href="config/test/config/server.cfg">config/test/config/server.cfg</a>, respectfully).
+First, get addr-index patched Bitcoin Core and running by following [this guide](http://counterparty.io/docs/bitcoin_core/). Regular Bitcoin Core will not suffice, as it only has a *transaction id-to-address* index, and no *address-to-transaction id* index. When addr-index Bitcoin Core is done indexing you're ready to start the RESTful address index server.
+
+The server `rest-addr` executable takes as its only argument the path to its config file. The config file specifies the Bitcoin Core RPC configuration (hostname, port, user, password) and also whether this Bitcoin Core is running on livenet or testnet. Example config files can be found in <a href="config/">config/</a>, which has configuration files for Bitcoin (live) and testnet3 (<a href="config/live/config/server.cfg">config/live/config/server.cfg</a> and <a href="config/test/config/server.cfg">config/test/config/server.cfg</a>, respectfully). 
 
 ### Example requests
     $ curl --silent https://blockchain.runeks.me/outputs/17RGKU1iHhiTBLoBFFFSJ6jX66NriVoanz/unspent | jq
