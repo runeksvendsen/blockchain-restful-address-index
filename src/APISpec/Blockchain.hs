@@ -22,10 +22,6 @@ type BlockchainApi =
     :<|>    "outputs" :> Capture "address" HC.Address :> "unspent" :> Get '[JSON] [AddressFundingInfo]
     :<|>    "publishTx" :> ReqBody '[PlainText] HT.Tx :> Post '[PlainText] HT.TxHash
 
--- | /outputs/<address>
--- type GetOutputs =
-
-
 
 -- Example URLs, in order:
 --------------------------

@@ -1,7 +1,6 @@
 module Lib.PublishTx.PublishTx
 (
     bitcoindNetworkSumbitTx
---    ,PublishTxResponse(..)
 
 ) where
 
@@ -14,17 +13,13 @@ import           Network.Bitcoin.Api.Client (Client, withClient)
 import           Network.Bitcoin.Api.Transaction (send)
 
 import           Network.Haskoin.Transaction as HT
-import           Network.Haskoin.Crypto as HC
 import qualified Data.Bitcoin.Transaction as Btc
 
 import qualified Data.ByteString as BS
 import qualified Data.ByteString.Base16 as B16
 import           Data.HexString as Hex
-import           Data.Text as T
 import qualified Data.Binary as Bin
 import qualified Data.ByteString.Lazy as BL
-
-
 
 
 

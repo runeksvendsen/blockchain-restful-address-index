@@ -70,7 +70,6 @@ configLookupOrFail conf name =
 loadConfig :: String -> IO Config
 loadConfig confFile = Conf.load [Conf.Required confFile]
 
-
 wrapArg :: (Config -> String -> IO ()) -> IO ()
 wrapArg main' = do
     args <- Sys.getArgs
