@@ -1,4 +1,5 @@
 # RESTful Bitcoin address index server
+![Build Status](https://api.travis-ci.org/runeksvendsen/blockchain-restful-address-index.svg?branch=master)](https://travis-ci.org/runeksvendsen/blockchain-restful-address-index)
 
 Thin RESTful HTTP wrapper for [address-index patched Bitcoin Core](https://github.com/btcdrak/bitcoin/tree/addrindex-0.12).
 
@@ -47,4 +48,3 @@ If you find a bug somewhere - either in the code, documentation or elsewhere - c
     
     $ curl --silent -X POST -H "Content-Type: text/plain; charset=utf-8" --data-ascii "0100000001c06626039bbb4710a60d3d469f84fb7d0cdd7eece891a0ee77d95b522ef337f900000000fdfe000048304502210081c7d8c575e5aa06bd75ec03a98674168e57842baaf0241263e57e322d5823a202202ed1df8f0caa1d038d15882cab38bb4030ce85d890e9d62587ca4ed13dc7681a01483045022100949b0b6da2057e382e342ce23c6294f1505878200086957d9a447e58d0d8f0bb022075e574bb023885d3ba97d34151009b09ed8fc8ed02e827113f1bcd041202b8d7014c6952210312d19d5027fa7094f644fad5d35d46349adcc08ac69c3bdf2f62b20b6eb8f18921020c37c1efafe5e84a0535e5436547551ad5c6c17c832c11ddb579b76e724e627521034f8136cf717830cb36e95f63864f0bc1aca9b0a14215e44a2698cd162df9e1b753aeffffffff024de4ad020000000017a9147788d956aa1d4d3240934ff22b2d066132a2e34f87bd9f0e00000000001976a91440bd51c2a0449540a14b4668cb05749f0713645a88ac00000000" https://blockchain.runeks.me/publishTx
     b2632e6c65776cb014a37b3ed54243a21ee98df8d89d8a2cf4055c5d2e4e21d8
-
