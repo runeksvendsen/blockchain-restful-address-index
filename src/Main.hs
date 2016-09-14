@@ -1,8 +1,4 @@
-{-# LANGUAGE  OverloadedStrings #-}
-{-# LANGUAGE DataKinds #-}
-{-# LANGUAGE FlexibleContexts #-}
-{-# LANGUAGE LambdaCase #-}
-{-# LANGUAGE TypeOperators #-}
+{-# LANGUAGE OverloadedStrings, DataKinds, FlexibleContexts, LambdaCase, TypeOperators #-}
 
 module Main where
 
@@ -19,21 +15,34 @@ import qualified Network.Wai as Wai
 import qualified Network.Wai.Handler.Warp as Warp
 import           Servant
 import qualified Control.Monad.Error.Class as Except
+import qualified Control.Monad.Reader as Reader
 import qualified Data.Maybe as Maybe
 
 
 api :: Proxy Spec.BlockchainApi
 api = Proxy
 
-server :: Conf.BTCRPCConf -> Server Spec.BlockchainApi --Conf.BTCRPCConf ->
-server cfg = allOutputs :<|> unspentOutputs :<|> publishTx
+-- Enables our handlers to pull a 'BTCRPCConf' out of nowhere
+type AppM = Reader.ReaderT Conf.BTCRPCConf Handler
+
+confServer :: Conf.BTCRPCConf -> Server Spec.BlockchainApi
+confServer cfg = enter (readerToEither cfg) server
+
+-- Magic stuff: http://stackoverflow.com/a/31098944/700597
+readerToEither :: Conf.BTCRPCConf -> AppM :~> Handler
+readerToEither cfg = Nat $ \x -> Reader.runReaderT x cfg
+
+server :: ServerT Spec.BlockchainApi AppM
+server = allOutputs :<|> unspentOuts :<|> publishTx
     where
-        allOutputs addr     = liftIO   $ Funding.getAllOutputs cfg addr
-        unspentOutputs addr = liftIO   $ Funding.getUnredeemedOutputs cfg addr
-        publishTx tx        = tryIOReq $ PubTx.bitcoindNetworkSumbitTx cfg tx
+        allOutputs addr  = Reader.ask >>= liftIO . flip Funding.getAllOutputs addr
+        unspentOuts addr = Reader.ask >>= liftIO . flip Funding.getUnredeemedOutputs addr
+        publishTx tx     = Reader.ask >>= liftIO . flip PubTx.bitcoindNetworkSumbitTx tx >>= onLeftThrow500
+        onLeftThrow500   = either (\e -> Except.throwError $ err500 { errBody = cs e }) return
 
 app :: Conf.BTCRPCConf -> Wai.Application
-app rpccfg = serve api $ server rpccfg
+app rpccfg = serve api $ confServer rpccfg
+
 
 main :: IO ()
 main = Conf.wrapArg $ \cfg _ -> do
@@ -53,9 +62,4 @@ appInit cfg = do
     return bitcoindConf
 
 
--- Util
-tryIOReq :: IO (Either String a) -> Handler a
-tryIOReq req = liftIO req >>= either
-    (\e -> Except.throwError $ err500 { errBody = cs e })
-     return
 
