@@ -1,5 +1,5 @@
 name:                blockchain-restful-address-index
-version:             0.1.0.0
+version:             0.2.0.0
 synopsis:            RESTful HTTP "addr-index bitcoind" wrapper
 description:         See README.md
 homepage:            https://github.com/runeksvendsen/blockchain-restful-address-index#readme
@@ -18,13 +18,14 @@ library
 
   build-depends:       base                      >= 4     && < 5
                      , text
-                     , haskoin-core
+                     , haskoin-core              == 0.4.0
                      , aeson
                      , string-conversions
                      , servant
                      , http-api-data
+                     , http-media
                      , errors
-                     , binary
+                     , cereal
 
   hs-source-dirs:      src
   default-language:    Haskell2010
@@ -45,18 +46,19 @@ executable rest-addr
                      , bitcoin-types
                      , bitcoin-tx
                      , base58string
-                     , haskoin-core
+                     , haskoin-core              == 0.4.0
                      , bytestring
                      , mtl
                      , transformers
                      , aeson
-                     , binary
+                     , cereal
                      , http-client
                      , string-conversions
                      , configurator
                      , servant
                      , servant-server
                      , http-api-data
+                     , http-media
                      , wai
                      , warp
                      , either

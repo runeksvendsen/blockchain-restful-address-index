@@ -18,8 +18,7 @@ import qualified Data.Bitcoin.Transaction as Btc
 import qualified Data.ByteString as BS
 import qualified Data.ByteString.Base16 as B16
 import           Data.HexString as Hex
-import qualified Data.Binary as Bin
-import qualified Data.ByteString.Lazy as BL
+import qualified Data.Serialize as Bin
 
 
 
@@ -41,6 +40,6 @@ tryBitcoindSubmitToNetwork tx conn = do
                 Right
                 (HT.hexToTxHash (B16.encode $ toBytes txid))
 
-serialize :: Bin.Binary a => a -> BS.ByteString
-serialize = BL.toStrict . Bin.encode
+serialize :: Bin.Serialize a => a -> BS.ByteString
+serialize = Bin.encode
 
