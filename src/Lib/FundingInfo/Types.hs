@@ -8,8 +8,6 @@ import qualified Network.Haskoin.Crypto as HC
 import           Data.Aeson (ToJSON, FromJSON, toJSON, parseJSON, Value(Object), (.:),
                              object, (.=), encode, decode)
 import           Data.Word (Word32)
-import           Data.Fixed (Fixed(MkFixed))
-import qualified Data.Maybe as Maybe
 import           Control.Monad (mzero)
 
 -- | Holds information about an output paying to an address
