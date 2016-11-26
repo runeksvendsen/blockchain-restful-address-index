@@ -10,11 +10,11 @@ Thin RESTful HTTP wrapper for [address-index patched Bitcoin Core](https://githu
 * **GET** `/outputs/<address>/unspent` (list all **unspent** outputs paying to `<address>`)
   * Response body: `Content-Type: application/json`
 * **GET** `/txOutProof/<txid1>(/<txid2>)(/<...>)(/<txidN>)` (obtain proof that specified transactions were included in a block)
-  * Response body: `{ proof_data : "<Hex-encoded proof data>"` (`Content-Type: application/json`)
+  * Response body: `{ 'proof_data' : "<hex-encoded proof data>"` (`Content-Type: application/json`)
   * Notes: Documentation of proof data format: https://bitcoin.org/en/developer-reference#merkleblock
 * **POST** `/publishTx` (publish transaction to the network) 
-  * Request body: `{ 'tx_data' : "<Hex-encoded transaction>" }` (`Content-Type: application/json`)
-  * Response body: `{ 'tx_id' : "<Transaction ID>" }` (`Content-Type: application/json`)
+  * Request body: `{ 'tx_data' : "<hex-encoded transaction>" }` (`Content-Type: application/json`)
+  * Response body: `{ 'tx_id' : "<transaction id>" }` (`Content-Type: application/json`)
 
 ### Limitations
 An output needs at least a single confirmation before it appears in the returned list (it needs to be in a block). However, if a new unconfirmed transaction appears which redeems this output, it will not be included in the list of unspent outputs. In other words, you cannot get information about an output until it has at least one confirmation, but the output will disappear from the list of unspent outputs as a soon as a spending transaction appears.
