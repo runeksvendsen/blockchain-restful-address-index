@@ -10,10 +10,11 @@ Thin RESTful HTTP wrapper for [address-index patched Bitcoin Core](https://githu
 * **GET** `/outputs/<address>/unspent` (list all **unspent** outputs paying to `<address>`)
   * Response body: `Content-Type: application/json`
 * **GET** `/txOutProof/<txid1>(/<txid2>)(/<...>)(/<txidN>)` (obtain proof that specified transactions were included in a block)
-  * Response body: `Content-Type: application/json`
+  * Response body: `{ proof_data : "<Hex-encoded proof data>"` (`Content-Type: application/json`)
+  * Notes: Documentation of proof data format: https://bitcoin.org/en/developer-reference#merkleblock
 * **POST** `/publishTx` (publish transaction to the network) 
-  * Request body: `{ 'tx_data' : "*<Hex-encoded transaction>*" }` (`Content-Type: application/json`)
-  * Response body: `{ 'tx_id' : "*<Transaction ID>*" }` (`Content-Type: application/json`)
+  * Request body: `{ 'tx_data' : "<Hex-encoded transaction>" }` (`Content-Type: application/json`)
+  * Response body: `{ 'tx_id' : "<Transaction ID>" }` (`Content-Type: application/json`)
 
 ### Limitations
 An output needs at least a single confirmation before it appears in the returned list (it needs to be in a block). However, if a new unconfirmed transaction appears which redeems this output, it will not be included in the list of unspent outputs. In other words, you cannot get information about an output until it has at least one confirmation, but the output will disappear from the list of unspent outputs as a soon as a spending transaction appears.
@@ -48,8 +49,10 @@ If you find a bug somewhere - either in the code, documentation or elsewhere - c
       }
     ]
     
-    $ curl --silent -X POST -H "Content-Type: text/plain; charset=utf-8" --data-ascii "0100000001c06626039bbb4710a60d3d469f84fb7d0cdd7eece891a0ee77d95b522ef337f900000000fdfe000048304502210081c7d8c575e5aa06bd75ec03a98674168e57842baaf0241263e57e322d5823a202202ed1df8f0caa1d038d15882cab38bb4030ce85d890e9d62587ca4ed13dc7681a01483045022100949b0b6da2057e382e342ce23c6294f1505878200086957d9a447e58d0d8f0bb022075e574bb023885d3ba97d34151009b09ed8fc8ed02e827113f1bcd041202b8d7014c6952210312d19d5027fa7094f644fad5d35d46349adcc08ac69c3bdf2f62b20b6eb8f18921020c37c1efafe5e84a0535e5436547551ad5c6c17c832c11ddb579b76e724e627521034f8136cf717830cb36e95f63864f0bc1aca9b0a14215e44a2698cd162df9e1b753aeffffffff024de4ad020000000017a9147788d956aa1d4d3240934ff22b2d066132a2e34f87bd9f0e00000000001976a91440bd51c2a0449540a14b4668cb05749f0713645a88ac00000000" https://blockchain.runeks.me/publishTx
-    b2632e6c65776cb014a37b3ed54243a21ee98df8d89d8a2cf4055c5d2e4e21d8
+    $ curl --silent -X POST -d "{ \"tx_data\" : \"0100000004387784a109347db68456333dd555ae29308f43af68b43c2c3feb07d40af630bb010000008b483045022100d76ce7b8ce52de584a5f65d498744f3cf38719f93c2e9bb70e17f673d33e483902200e1717aa43cea97a0143d3f7de3b76811706a6cf5fe613d232c4c186c567e025014104f5f1eae6299b2666606556ee8ba8e7bc98e4e7d382137922ce9255723d5844a32338d1bbb39e1fedaf5c6d47ba055e98b6efff0ed8d4ad7258b459f89e21d44efeffffff86c0510ed392c7bfe7f75d928290b505d1b1a5a91e099cf6a73b0c28142cbab8000000006a473044022055d2fa3f6d3ac66f05212305b1b57a8922681015e9c99155d90e324c305cc3bc022050b7e91495b8f10bebddf01130fe8e3328042f742b57561c2303f0f1844898a9012102fa9409446e881c4450c13cb73635564e56a5d7aa2ca4d021feb02534fbfc2108feffffffe586cdb4575f26499016dfda5c21508a0fead4725dddd0bae1f42e225aa6c889010000006a4730440220312af4a1d1e141f5d377da41281b58705c647191701a39e15b3db333f10cdc810220653744b38c38a9ed75f7ec6b0617ee39ed02ab75a82fa1641787c4bd57fff460012103376c866adb5c2a5234af7a5d88cbefaefbb770a39ac84df11f40e9717ace9580feffffffb2b0b65c2307bb9a346ec49adab60339b36a4d36563fbaad89d5eaef0d4679d6000000006a47304402207077e8311cafe54161fd5e0e918174de689a9a520d2b74f6769ee0b6c2cab44d02202d23ce9da048105601893f4efd1f5ba91123b930f0eb039fd51859ae05adf90b0121035f3722b2e100919ec1bb561d6832b44504eff1185679e4b2e2e83c79fa71c3f3feffffff024d7d3806000000001976a914fbc4b1c9cad2e76c31e168aa166319b7f73c959c88acab690f00000000001976a9140e4260e7f4db85a344ce35399e29964a6dfbed7688ac38b90600\" }" -H "Content-Type: application/json" https://blockchain.runeks.me/publishTx
+    {
+       "tx_id": "4f294af919ab9fe2bb15f2aabd716df223b68399beec531f15635dea70ed3cb3"
+    }
 
 ### Test servers
 Bitcoin: https://blockchain.runeks.me
