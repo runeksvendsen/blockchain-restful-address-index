@@ -1,4 +1,4 @@
-{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE OverloadedStrings, DeriveGeneric, DeriveAnyClass #-}
 module Lib.TxOutProof.Types where
 
 import qualified Network.Haskoin.Block                  as HB
@@ -7,7 +7,10 @@ import           Data.Aeson (ToJSON, FromJSON, Value(String), toJSON, parseJSON,
 import qualified Data.ByteString.Base16     as B16
 import qualified Data.Serialize             as Bin
 import           Data.String.Conversions      (cs)
+import           GHC.Generics
 
+
+data ProofResp = ProofResp { proof_data :: HB.MerkleBlock } deriving (Generic, ToJSON, FromJSON)
 
 instance ToJSON HB.MerkleBlock where
     toJSON = String . cs . B16.encode . Bin.encode

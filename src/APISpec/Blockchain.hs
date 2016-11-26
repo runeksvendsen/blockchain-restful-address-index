@@ -6,7 +6,7 @@ module APISpec.Blockchain
 )
 where
 
-import           APISpec.Types          (Addr, PushTxReq, PushTxResp, MerkleBlock)
+import           APISpec.Types          (Addr, PushTxReq, PushTxResp, ProofResp)
 import           Lib.FundingInfo.Types  (AddressFundingInfo)
 import           Servant.API
 -- import           Servant.API.Capture
@@ -18,7 +18,7 @@ import qualified Data.Text as T
 type BlockchainApi =
         "outputs"    :> Capture "address" Addr :> "all"        :> Get  '[JSON] [AddressFundingInfo]
   :<|>  "outputs"    :> Capture "address" Addr :> "unspent"    :> Get  '[JSON] [AddressFundingInfo]
-  :<|>  "txOutProof" :> CaptureAll "txid" T.Text               :> Get  '[JSON] MerkleBlock
+  :<|>  "txOutProof" :> CaptureAll "txid" T.Text               :> Get  '[JSON] ProofResp
   :<|>  "publishTx"  :> ReqBody '[JSON] PushTxReq              :> Post '[JSON] PushTxResp
   :<|>  "rawCmd"     :> Capture "method" String  :> CaptureAll "args" T.Text :> Get  '[JSON] JSON.Value
 

@@ -1,4 +1,4 @@
-{-# LANGUAGE  GeneralizedNewtypeDeriving, DeriveGeneric, OverloadedStrings #-}
+{-# LANGUAGE GeneralizedNewtypeDeriving, DeriveGeneric, OverloadedStrings #-}
 
 module APISpec.Types
 (
@@ -6,13 +6,14 @@ module APISpec.Types
   , Addr(..)
   , PushTxReq(..)
   , PushTxResp(..)
+  , ProofResp(..)
   , HB.MerkleBlock
   , module Orphans
 )
 where
 
-import           Lib.FundingInfo.Types (AddressFundingInfo(..))
-import           Lib.TxOutProof.Types()
+import           Lib.FundingInfo.Types      (AddressFundingInfo(..))
+import           Lib.TxOutProof.Types       (ProofResp(..))
 import           Orphans
 import qualified Network.Haskoin.Transaction            as HT
 import qualified Network.Haskoin.Block                  as HB
