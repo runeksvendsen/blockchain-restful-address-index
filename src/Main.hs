@@ -45,7 +45,7 @@ server rawPath = allOutputs :<|> unspentOuts :<|> txOutProof :<|> publishTx :<|>
             liftIO . flip Funding.getUnredeemedOutputs (getAddress addr)
         txOutProof addrL = Reader.ask >>=
             liftIO . Proof.getProof (Proof.parseTxIds addrL) Nothing >>=
-            \mbM -> maybe throw404 (return . ProofResp) mbM
+            either Except.throwError (return . ProofResp)
         publishTx (PushTxReq tx) = Reader.ask >>=
             liftIO . flip PubTx.bitcoindNetworkSumbitTx tx >>= onLeftThrow500
         rawCmd method args = do
@@ -54,7 +54,6 @@ server rawPath = allOutputs :<|> unspentOuts :<|> txOutProof :<|> publishTx :<|>
                 [ "Args:   " ++ show args ] ++
                 [ "RAW path: " ++ show rawPath ]
             return (JSON.toJSON ["hey" :: String])
-        throw404 = Except.throwError $ err400 { errBody = "Transaction(s) not found" }
         onLeftThrow500   = either (\e -> Except.throwError $ err500 { errBody = cs e })
             (return . PushTxResp)
 

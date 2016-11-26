@@ -11,13 +11,25 @@ import           Data.HexString                 as Hex
 import qualified Data.Serialize                 as Bin
 import qualified Data.Text                      as T
 import           Data.String.Conversions          (cs)
+import           Control.Exception                (try)
+import           Network.HTTP.Client              (HttpException)
+import           Servant
+
+
+
+getProof :: [BT.TransactionId] -> Maybe BT.BlockHash -> BTCRPCConf -> IO (Either ServantErr HB.MerkleBlock)
+getProof txIdL mB conf =
+    try (getProofUnsafe txIdL mB conf) >>=
+        \resE -> case resE of
+            Left e -> return $ Left $ err500 { errBody = cs $ show (e :: HttpException) }
+            Right bM -> return $ maybe (Left $ err400 { errBody = "Transaction(s) not found" }) Right bM
 
 
 parseTxIds :: [T.Text] -> [BT.TransactionId]
 parseTxIds = map $ hexString . cs
 
-getProof :: [BT.TransactionId] -> Maybe BT.BlockHash -> BTCRPCConf -> IO (Maybe HB.MerkleBlock)
-getProof txIdL bhM (BTCRPCConf host port user pass _) =
+getProofUnsafe :: [BT.TransactionId] -> Maybe BT.BlockHash -> BTCRPCConf -> IO (Maybe HB.MerkleBlock)
+getProofUnsafe txIdL bhM (BTCRPCConf host port user pass _) =
     withClient host port user pass $ \client -> do
         hexM <- UTXO.txOutProof client txIdL bhM
         return $ decodeHex <$> hexM
