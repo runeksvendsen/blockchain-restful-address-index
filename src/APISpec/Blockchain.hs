@@ -1,4 +1,4 @@
-{-# LANGUAGE DataKinds, LambdaCase, TypeOperators, OverloadedStrings #-}
+{-# LANGUAGE DataKinds, LambdaCase, TypeOperators, OverloadedStrings, GeneralizedNewtypeDeriving #-}
 
 module APISpec.Blockchain
 (
@@ -6,20 +6,21 @@ module APISpec.Blockchain
 )
 where
 
-import           Lib.FundingInfo.Types            (AddressFundingInfo)
-
-import qualified Network.Haskoin.Transaction as HT
-import qualified Network.Haskoin.Crypto as HC
-
+import           APISpec.Types          (Addr, PushTxReq, PushTxResp, MerkleBlock)
+import           Lib.FundingInfo.Types  (AddressFundingInfo)
 import           Servant.API
-import           Network.HTTP.Media ((//))
+-- import           Servant.API.Capture
+import qualified Data.Aeson as JSON
+import qualified Data.Text as T
 
 
 -- |The API exposed by this server.
 type BlockchainApi =
-            "outputs" :> Capture "address" HC.Address :> "all"     :> Get  '[JSON] [AddressFundingInfo]
-    :<|>    "outputs" :> Capture "address" HC.Address :> "unspent" :> Get  '[JSON] [AddressFundingInfo]
-    :<|>    "publishTx" :> ReqBody '[PlainText] HT.Tx              :> Post '[PlainText] HT.TxHash
+        "outputs"    :> Capture "address" Addr :> "all"        :> Get  '[JSON] [AddressFundingInfo]
+  :<|>  "outputs"    :> Capture "address" Addr :> "unspent"    :> Get  '[JSON] [AddressFundingInfo]
+  :<|>  "txOutProof" :> CaptureAll "txid" T.Text               :> Get  '[JSON] MerkleBlock
+  :<|>  "publishTx"  :> ReqBody '[JSON] PushTxReq              :> Post '[JSON] PushTxResp
+  :<|>  "rawCmd"     :> Capture "method" String  :> CaptureAll "args" T.Text :> Get  '[JSON] JSON.Value
 
 
 -- Example URLs, in order:

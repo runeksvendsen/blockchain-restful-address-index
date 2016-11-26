@@ -14,18 +14,21 @@ cabal-version:       >=1.10
 library
   exposed-modules:     APISpec.Blockchain
                      , APISpec.Types
-  ghc-options:         -W -O2 -threaded -with-rtsopts=-N
+  ghc-options:         -W
 
   build-depends:       base                      >= 4     && < 5
+                     , base16-bytestring
                      , text
+                     , string-conversions
                      , haskoin-core              == 0.4.0
                      , aeson
-                     , string-conversions
-                     , servant
+                     , servant                   == 0.8.1
                      , http-api-data
                      , http-media
                      , errors
                      , cereal
+                     , swagger2
+                     , lens
 
   hs-source-dirs:      src
   default-language:    Haskell2010
@@ -55,8 +58,8 @@ executable rest-addr
                      , http-client
                      , string-conversions
                      , configurator
-                     , servant
-                     , servant-server
+                     , servant                   == 0.8.1
+                     , servant-server            == 0.8.1
                      , http-api-data
                      , http-media
                      , wai
@@ -70,6 +73,7 @@ executable rest-addr
                      , APISpec.Blockchain
                      , Lib.FundingInfo.Types
                      , Lib.PublishTx.PublishTx
+                     , Lib.TxOutProof.Proof
                      , Config
 
   default-language:    Haskell2010

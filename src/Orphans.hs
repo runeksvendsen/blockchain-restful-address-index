@@ -11,7 +11,19 @@ import qualified Web.HttpApiData as Web
 import qualified Servant.API.ContentTypes as Content
 import           Data.String.Conversions (cs)
 import           Data.EitherR (fmapL)
+-- import           Servant
+-- import           Control.Lens
+-- import qualified Data.Text as T
+-- import Data.Swagger
 
+--Swagger
+
+-- instance ToSchema HT.TxHash where
+--     declareNamedSchema = do
+--         doubleSchema <- declareSchemaRef (Proxy :: Proxy HT.TxHash)
+--         return $ NamedSchema (Just "TxHash") $ mempty
+--           & type_ .~ SwaggerString
+--           & maxLength .~ (Just 32)
 
 decodeHex bs = maybe (Left "invalid hex string") Right (HU.decodeHex bs)
 
