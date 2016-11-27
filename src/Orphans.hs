@@ -11,19 +11,7 @@ import qualified Web.HttpApiData as Web
 import qualified Servant.API.ContentTypes as Content
 import           Data.String.Conversions (cs)
 import           Data.EitherR (fmapL)
--- import           Servant
--- import           Control.Lens
--- import qualified Data.Text as T
--- import Data.Swagger
 
---Swagger
-
--- instance ToSchema HT.TxHash where
---     declareNamedSchema = do
---         doubleSchema <- declareSchemaRef (Proxy :: Proxy HT.TxHash)
---         return $ NamedSchema (Just "TxHash") $ mempty
---           & type_ .~ SwaggerString
---           & maxLength .~ (Just 32)
 
 decodeHex bs = maybe (Left "invalid hex string") Right (HU.decodeHex bs)
 
@@ -43,11 +31,16 @@ instance Content.MimeRender Content.PlainText HT.Tx where
     mimeRender _ = cs . HU.encodeHex . cs . Bin.encode
 
 instance Content.MimeRender Content.PlainText HT.TxHash where
-    mimeRender _ = cs . HT.txHashToHex
-
+    mimeRender _ = cs . Web.toUrlPiece
 instance Content.MimeUnrender Content.PlainText HT.TxHash where
-    mimeUnrender _ bs = maybe
-        (Left "failed to parse Bitcoin address") Right $
-            HT.hexToTxHash (cs bs)
+    mimeUnrender _ = fmapL cs . Web.parseUrlPiece . cs
+
+instance Web.FromHttpApiData HT.TxHash where
+    parseUrlPiece txt = maybe
+        (Left "TxHash parse failed.") Right $
+            HT.hexToTxHash  (cs txt)
+
+instance Web.ToHttpApiData HT.TxHash where
+    toUrlPiece = cs . HT.txHashToHex
 
 

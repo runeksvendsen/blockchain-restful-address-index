@@ -2,6 +2,8 @@
 
 module Main where
 
+import           Types
+import           Util
 import           Orphans ()
 
 import qualified APISpec.Blockchain as Spec
@@ -26,9 +28,6 @@ import qualified Data.Aeson as JSON
 api :: Proxy Spec.BlockchainApi
 api = Proxy
 
--- Enables our handlers to pull a 'BTCRPCConf' out of nowhere
-type AppM = Reader.ReaderT Conf.BTCRPCConf Handler
-
 confServer :: Conf.BTCRPCConf -> BS.ByteString -> Server Spec.BlockchainApi
 confServer cfg path = enter (readerToEither cfg) (server path)
 
@@ -43,9 +42,8 @@ server rawPath = allOutputs :<|> unspentOuts :<|> txOutProof :<|> publishTx :<|>
             liftIO . flip Funding.getAllOutputs (getAddress addr)
         unspentOuts addr = Reader.ask >>=
             liftIO . flip Funding.getUnredeemedOutputs (getAddress addr)
-        txOutProof addrL = Reader.ask >>=
-            liftIO . Proof.getProof (Proof.parseTxIds addrL) Nothing >>=
-            either Except.throwError (return . ProofResp)
+        txOutProof txid = Proof.getFundingProof txid >>=
+            either Except.throwError return
         publishTx (PushTxReq tx) = Reader.ask >>=
             liftIO . flip PubTx.bitcoindNetworkSumbitTx tx >>= onLeftThrow500
         rawCmd method args = do

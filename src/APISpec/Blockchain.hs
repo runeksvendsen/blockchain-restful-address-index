@@ -6,19 +6,19 @@ module APISpec.Blockchain
 )
 where
 
-import           APISpec.Types          (Addr, PushTxReq, PushTxResp, ProofResp)
+import           APISpec.Types          (Addr, PushTxReq, PushTxResp, FundingProof)
 import           Lib.FundingInfo.Types  (AddressFundingInfo)
 import           Servant.API
--- import           Servant.API.Capture
-import qualified Data.Aeson as JSON
-import qualified Data.Text as T
+import qualified Network.Haskoin.Transaction    as HT
+import qualified Data.Aeson                     as JSON
+import qualified Data.Text                      as T
 
 
 -- |The API exposed by this server.
 type BlockchainApi =
         "outputs"    :> Capture "address" Addr :> "all"        :> Get  '[JSON] [AddressFundingInfo]
   :<|>  "outputs"    :> Capture "address" Addr :> "unspent"    :> Get  '[JSON] [AddressFundingInfo]
-  :<|>  "txOutProof" :> CaptureAll "txid" T.Text               :> Get  '[JSON] ProofResp
+  :<|>  "txOutProof" :> Capture "txid" HT.TxHash               :> Get  '[JSON] FundingProof
   :<|>  "publishTx"  :> ReqBody '[JSON] PushTxReq              :> Post '[JSON] PushTxResp
   :<|>  "rawCmd"     :> Capture "method" String  :> CaptureAll "args" T.Text :> Get  '[JSON] JSON.Value
 

@@ -6,14 +6,14 @@ module APISpec.Types
   , Addr(..)
   , PushTxReq(..)
   , PushTxResp(..)
-  , ProofResp(..)
+  , FundingProof(..)
   , HB.MerkleBlock
   , module Orphans
 )
 where
 
 import           Lib.FundingInfo.Types      (AddressFundingInfo(..))
-import           Lib.TxOutProof.Types       (ProofResp(..))
+import           Lib.TxOutProof.Types       (FundingProof(..))
 import           Orphans
 import qualified Network.Haskoin.Transaction            as HT
 import qualified Network.Haskoin.Block                  as HB
