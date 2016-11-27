@@ -6,11 +6,11 @@ Thin RESTful HTTP wrapper for [address-index patched Bitcoin Core](https://githu
 ### Exposed resources
 
 * **GET** `/outputs/<address>/all` (list all outputs paying to `<address>`)
-  * Response body: `Content-Type: application/json`
+  * Response body: `Content-Type: application/json` (see schema in example below)
 * **GET** `/outputs/<address>/unspent` (list all **unspent** outputs paying to `<address>`)
-  * Response body: `Content-Type: application/json`
-* **GET** `/txOutProof/<txid1>(/<txid2>)(/<...>)(/<txidN>)` (obtain proof that specified transactions were included in a block)
-  * Response body: `{ 'proof_data' : "<hex-encoded proof data>"` (`Content-Type: application/json`)
+  * Response body: `Content-Type: application/json` (same schema as `/all`)
+* **GET** `/txOutProof/<txid>` (obtain proof that a transaction was included in a block)
+  * Response body: `{ 'proof_data' : "<hex-encoded proof data>", 'proof_tx_data' : "<hex-encoded tx data>" }` (`Content-Type: application/json`)
   * Notes: Documentation of proof data format: https://bitcoin.org/en/developer-reference#merkleblock
 * **POST** `/publishTx` (publish transaction to the network) 
   * Request body: `{ 'tx_data' : "<hex-encoded transaction>" }` (`Content-Type: application/json`)
