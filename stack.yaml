@@ -4,7 +4,7 @@ packages:
 - '.'
 - location:
     git: https://github.com/runeksvendsen/haskell-bitcoin-api.git
-    commit: 168e1d039c8024055b0a85c9aa6a37bdb588296c
+    commit: d604785de5f0f31f422740029d67e22d5805fb4f
   extra-dep: true
 
 
