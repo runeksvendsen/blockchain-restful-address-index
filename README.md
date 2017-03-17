@@ -17,14 +17,14 @@ Thin RESTful HTTP wrapper for [address-index patched Bitcoin Core](https://githu
   * Response body: `{ 'tx_id' : "<transaction id>" }` (`Content-Type: application/json`)
 
 ### Limitations
-An output needs at least a single confirmation before it appears in the returned list (it needs to be in a block). However, if a new unconfirmed transaction appears which redeems this output, it will not be included in the list of unspent outputs. In other words, you cannot get information about an output until it has at least one confirmation, but the output will disappear from the list of unspent outputs as a soon as a spending transaction appears.
+An output needs at least a single confirmation before it appears in the returned list (it needs to be in a block). However, if a new unconfirmed transaction appears which redeems this output, it will not be included in the list of unspent outputs. In other words, you cannot get information about an output until it has at least one confirmation, but the output will disappear immediately from the list of unspent outputs if a spending transaction appears.
 
 So far, pagination is also unsupported, because I can't get bitcoind to do it: https://github.com/btcdrak/bitcoin/issues/11
 
 ### Building
-Building the server requires the build tool *stack*, which is available in Ubuntu 16.04 as the `haskell-stack` package. For distributions without the `stack` build tool available, install it [using this command](https://docs.haskellstack.org/en/stable/README/#how-to-install), and remove the `haskell-stack` package from the `apt-get install` line.
+Building the server requires the build tool *stack*, which is available in Ubuntu 16.04 as the `haskell-stack` package. For distributions without the `stack` build tool available, install it [using this command](https://docs.haskellstack.org/en/stable/README/#how-to-install), and remove the `haskell-stack` package from the `apt-get install` line below.
 
-    apt-get update && apt-get install -y autoconf autogen libtool xz-utils git-core haskell-stack
+    sudo apt-get update && sudo apt-get install -y autoconf autogen libtool xz-utils git-core haskell-stack
     git clone https://github.com/runeksvendsen/blockchain-restful-address-index.git
     cd blockchain-restful-address-index/
     stack setup && stack build
