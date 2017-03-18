@@ -13,7 +13,7 @@ module APISpec.Types
 where
 
 import           Lib.FundingInfo.Types      (AddressFundingInfo(..))
-import           Lib.TxOutProof.Types       (FundingProof(..))
+import           Lib.TxOutProof.Types
 import           Orphans
 import qualified Network.Haskoin.Transaction            as HT
 import qualified Network.Haskoin.Block                  as HB

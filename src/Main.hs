@@ -43,7 +43,7 @@ server rawPath = allOutputs :<|> unspentOuts :<|> txOutProof :<|> publishTx :<|>
         unspentOuts addr = Reader.ask >>=
             liftIO . flip Funding.getUnredeemedOutputs (getAddress addr)
         txOutProof txid = Proof.getFundingProof txid >>=
-            either Except.throwError return
+            maybe (Except.throwError err404 { errBody = "Transaction not found" }) return
         publishTx (PushTxReq tx) = Reader.ask >>=
             liftIO . flip PubTx.bitcoindNetworkSumbitTx tx >>= onLeftThrow500
         rawCmd method args = do

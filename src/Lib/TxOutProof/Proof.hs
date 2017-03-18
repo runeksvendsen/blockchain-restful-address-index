@@ -17,20 +17,24 @@ import qualified Network.Haskoin.Transaction    as HT
 import           Data.HexString                 as Hex
 import qualified Data.Serialize                 as Bin
 import qualified Data.Text                      as T
+import qualified Control.Exception              as E
 import           Network.HTTP.Client              (HttpException)
 import           Servant
 
 
 
 -- | Get funding proof for given txid.
-getFundingProof :: HT.TxHash -> AppM (Either ServantErr FundingProof)
+getFundingProof :: HT.TxHash -> AppM (Maybe FundingProof)
 getFundingProof txid' = do
-    txE    <- errConv . Bin.decode . Hex.toBytes <$> withClient' (`Chain.getRawTransaction` txid)
-    proofE <- getProof [txid] Nothing
-    return $ FundingProof <$> txE <*> proofE
+    txStrM <- withClient' (`Chain.getRawTransaction` txid)
+    case errConv . Bin.decode . Hex.toBytes <$> txStrM of
+        Nothing -> return Nothing
+        Just tx -> do
+          proof <- either E.throw id <$> getProof [txid] Nothing
+          return $ Just $ FundingProof tx proof
   where
     txid = convOrFail txid'
-    errConv = fmapL (\str -> err500 { errBody = "JSON conversion error: " <> cs str })
+    errConv = either (\str -> E.throw $ err500 { errBody = "JSON conversion error: " <> cs str }) id
 
 convOrFail :: (Show a, JSON.ToJSON a, JSON.FromJSON b) => a -> b
 convOrFail a = fromMaybe (failErr a) (JSON.decode . JSON.encode $ a)
@@ -42,7 +46,7 @@ getProof txIdL mB = withClient' $ \client ->
     try (getProofUnsafe client txIdL mB) >>=
         \resE -> case resE of
             Left e -> return $ Left $ err500 { errBody = cs $ show (e :: HttpException) }
-            Right bM -> return $ maybe (Left $ err400 { errBody = "Transaction(s) not found" }) Right bM
+            Right bM -> return $ maybe (Left $ err404 { errBody = "Transaction(s) not found" }) Right bM
 
 parseTxIds :: [T.Text] -> [BT.TransactionId]
 parseTxIds = map $ hexString . cs

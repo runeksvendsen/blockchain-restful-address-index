@@ -1,7 +1,7 @@
 {-# LANGUAGE OverloadedStrings, DeriveGeneric, DeriveAnyClass, RecordWildCards #-}
 module Lib.TxOutProof.Types
-(
-  module Lib.TxOutProof.Types
+( FundingProof(..)
+, verifyFundingProof
 )
 where
 
