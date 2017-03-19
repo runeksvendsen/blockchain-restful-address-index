@@ -1,14 +1,16 @@
-name: blockchain-restful-address-index
+name: blockchain-restful-address-index-server
 version: '0.2.0.0'
-synopsis: RESTful HTTP "addr-index bitcoind" wrapper
+synopsis: Server for RESTful HTTP "addr-index bitcoind" wrapper
 description: See README.md
 category: Bitcoin,Web
 author: Rune K. Svendsen
 maintainer: runesvend@gmail.com
 license: OtherLicense
 license-file: LICENSE
-github: runeksvendsen/blockchain-restful-address-index
+github: runeksvendsen/blockchain-restful-address-index-server
+
 dependencies:
+- blockchain-restful-address-index-api
 - base16-bytestring
 - text
 - string-conversions
@@ -21,9 +23,9 @@ dependencies:
 - cereal
 - hexstring
 - base >=4 && <5
-- bitcoin-api
 - bitcoin-types
 - bitcoin-tx
+- bitcoin-api
 - base58string
 - bytestring
 - mtl
@@ -38,15 +40,13 @@ dependencies:
 library:
   source-dirs: src
   ghc-options: -W
-  exposed-modules:
-  - APISpec.Blockchain
-  - APISpec.Types
-  #dependencies:
 
 executables:
   rest-addr:
+    dependencies:
+    - blockchain-restful-address-index-server
     main: Main.hs
-    source-dirs: src
+    source-dirs: driver
     ghc-options:
     - -W
     - -threaded

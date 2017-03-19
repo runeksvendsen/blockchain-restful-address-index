@@ -4,12 +4,12 @@ module Lib.FundingInfo.FundingInfo
 (
     module Lib.FundingInfo.FundingInfo
    ,module Lib.FundingInfo.Internal.Types
-   ,module Lib.FundingInfo.Types
+   ,module Network.Bitcoin.AddrIndex.Types
 )
 
 where
 
-import           Lib.FundingInfo.Types
+import           Network.Bitcoin.AddrIndex.Types
 import           Lib.FundingInfo.Internal.Types
 import           Config (BTCRPCConf(..))
 

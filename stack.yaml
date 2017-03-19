@@ -2,11 +2,11 @@ resolver: lts-7.1
 
 packages:
 - '.'
+- '../blockchain-restful-address-index-api'
 - location:
     git: https://github.com/runeksvendsen/haskell-bitcoin-api.git
     commit: 5c3d774300bbc283406b6c9719f8d223e2e4f267
   extra-dep: true
-
 
 extra-deps:
 - haskoin-core-0.4.0

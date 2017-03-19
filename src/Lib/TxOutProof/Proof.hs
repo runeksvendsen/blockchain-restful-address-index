@@ -3,7 +3,7 @@ module Lib.TxOutProof.Proof where
 
 import           Util
 import           Types
-import           Lib.TxOutProof.Types
+import           Network.Bitcoin.AddrIndex.Types
 import           Config (BTCRPCConf(..))
 import qualified Network.Bitcoin.Api.Types.HeaderInfo   as HDI
 import           Network.Bitcoin.Api.Client               (Client, withClient)

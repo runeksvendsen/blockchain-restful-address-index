@@ -2,7 +2,7 @@
 
 module Lib.FundingInfo.Internal.Types where
 
-import           Lib.FundingInfo.Types
+import           Network.Bitcoin.AddrIndex.Types
 
 import qualified Data.Bitcoin.Types  as BT
 import qualified Data.Base58String.Bitcoin as B58S

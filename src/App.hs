@@ -1,13 +1,12 @@
 {-# LANGUAGE OverloadedStrings, DataKinds, FlexibleContexts, LambdaCase, TypeOperators #-}
 
-module Main where
+module App ( main ) where
 
 import           Types
 import           Util
-import           Orphans ()
 
-import qualified APISpec.Blockchain as Spec
-import           APISpec.Types
+import qualified Network.Bitcoin.AddrIndex.API as Spec
+import           Network.Bitcoin.AddrIndex.Types
 import qualified Lib.FundingInfo.FundingInfo as Funding
 import qualified Lib.PublishTx.PublishTx as PubTx
 import qualified Lib.TxOutProof.Proof as Proof
