@@ -1,7 +1,7 @@
 # RESTful Bitcoin address index server
 [![Build Status](https://api.travis-ci.org/runeksvendsen/blockchain-restful-address-index.svg?branch=master)](https://travis-ci.org/runeksvendsen/blockchain-restful-address-index)
 
-Thin RESTful HTTP wrapper for [address-index patched Bitcoin Core](https://github.com/btcdrak/bitcoin/tree/addrindex-0.12).
+Thin RESTful HTTP wrapper for [address-index patched Bitcoin Core](https://github.com/CounterpartyXCP/Documentation/blob/master/Installation/bitcoin_core.md).
 
 ### Exposed resources
 
